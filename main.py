@@ -4,7 +4,6 @@ from copy import copy
 from openpyxl import Workbook, load_workbook
 import calendar
 from datetime import datetime
-print('test')
 from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
 from telebot.types import BotCommand, InlineKeyboardMarkup,  InlineKeyboardButton
