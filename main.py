@@ -1,4 +1,5 @@
 import re
+import sys
 from copy import copy
 
 from openpyxl import Workbook, load_workbook
@@ -64,7 +65,7 @@ class Main:
 
 
 class Edit_chart(Main):
-    def __init__(self):
+    def __init__(self,new_chart):
         super().__init__()
         # список всех месяцев
         self.list_months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май',
@@ -86,6 +87,7 @@ class Edit_chart(Main):
         self.start_row = []
         self.start_col = []
         self.new_index = []
+        self.new_chart = new_chart
     def add_colls(self, colls, cell, i, new_value):
         for coll in colls:
             if coll in str(
@@ -292,30 +294,30 @@ class Edit_chart(Main):
                 elif isinstance(cell.value, str) and "Итоги" in cell.value:
                     # Заменяем "Итоги (Декабрь)" на новый месяц
                     cell.value = f'Итоги ({self.list_months[self.new_index]})'
+        if self.new_chart == 1:
+            self.result = self.days_difference_current_next_month()
 
-        self.result = self.days_difference_current_next_month()
-
-        # разъединяЕм сначала ячейки чтобы добавить/удалить  новые столбцы
-        self.new_list.unmerge_cells(
-            f'B2:{self.list_days_2[self.result[0]]}2')
-
-        # количество дней, которых не хватает в новом месяце
-        count_add = self.result[1]
-        result_1 = []
-        if self.result[1] > 0:
-            # находим крайнии строчки последнего дня , для последующего копирования и создания новых
-            for i in range(1, self.find_end_B_result + 1):
-                result_1.append(f'{(self.list_days_2[self.result[0]])}{i}')
-        # функция для создания новой страницы и обработки дней, дней недель  и прочеее для нового месяца
-        self.copyRange(result_1, count_add)
-        # объединяем ячейки обратно где название месяца в основной таблице
-        self.new_list.merge_cells(
-            f'B2:{self.list_days_2[self.result[0] + self.result[1]]}2')
+            # разъединяЕм сначала ячейки чтобы добавить/удалить  новые столбцы
+            self.new_list.unmerge_cells(
+                f'B2:{self.list_days_2[self.result[0]]}2')
+            users = [self.new_list[f'B{user}'].value for user in range(find_start_B_result, self.find_end_B_result)]
+            # print(self.new_list[f'B{find_start_B_result}'].value)
+            # количество дней, которых не хватает в новом месяце
+            count_add = self.result[1]
+            result_1 = []
+            if self.result[1] > 0:
+                # находим крайнии строчки последнего дня , для последующего копирования и создания новых
+                for i in range(1, self.find_end_B_result + 1):
+                    result_1.append(f'{(self.list_days_2[self.result[0]])}{i}')
+            # функция для создания новой страницы и обработки дней, дней недель  и прочеее для нового месяца
+            self.copyRange(result_1, count_add)
+            # объединяем ячейки обратно где название месяца в основной таблице
+            self.new_list.merge_cells(f'B2:{self.list_days_2[self.result[0] + self.result[1]]}2')
         # сохраняем итоговый вариант
         self.file.save('test1.xlsx')
 
 
 # Запускаем бота
 # if __name__ == "__main__":
-Edit_chart()
+Edit_chart(None)
 # bot.polling(none_stop=True)
