@@ -72,7 +72,7 @@ class Edit_chart(Main):
                             'Июнь', 'Июль',
                             'Август', 'Сентябрь', 'Октябрь', 'Ноябрь',
                             'Декабрь']
-        self.file = load_workbook('График работы.xlsx')  # загружаем файл
+        self.file = load_workbook(r'C:\Users\Лара\PycharmProjects\grafic_pfz\График работы.xlsx')  # загружаем файл
         self.weekdays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
         self.list_days_2 = {28: "AE", 29: "AF", 30: "AG", 31: "AH",
                             32: "AI", 33: "AJ", 34: "AK"}
@@ -294,6 +294,7 @@ class Edit_chart(Main):
                 elif isinstance(cell.value, str) and "Итоги" in cell.value:
                     # Заменяем "Итоги (Декабрь)" на новый месяц
                     cell.value = f'Итоги ({self.list_months[self.new_index]})'
+        print(self.new_chart)
         if self.new_chart == 1:
             self.result = self.days_difference_current_next_month()
 
@@ -314,10 +315,10 @@ class Edit_chart(Main):
             # объединяем ячейки обратно где название месяца в основной таблице
             self.new_list.merge_cells(f'B2:{self.list_days_2[self.result[0] + self.result[1]]}2')
         # сохраняем итоговый вариант
-        self.file.save('test1.xlsx')
+        self.file.save(r'C:\Users\Лара\PycharmProjects\grafic_pfz\test1.xlsx')
 
 
 # Запускаем бота
 # if __name__ == "__main__":
-Edit_chart(None)
+Edit_chart(sys.argv[1:])
 # bot.polling(none_stop=True)
