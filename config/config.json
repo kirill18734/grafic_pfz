@@ -1,0 +1,12 @@
+{
+
+  "ServiceMode": {
+    "test_mode": "True",
+    "AlertName": "Тест",
+    "url_monitoring": "https://dev.taxcom.ru/jira/browse/GSA-23486?filter=25413"
+  },
+  "my_telegram_bot": {
+    "bot_token": "7797057768:AAFI6ah7MyTdV8zJzwjRiGYITV-RN3qRvdc",
+    "chat_id": "5444152518"
+  }
+}
