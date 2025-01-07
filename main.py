@@ -290,6 +290,7 @@ class Main:
             reply_markup=new_markup
         )
 
+test
 
 # Main(sys.argv)
 Main()
