@@ -1,38 +1,70 @@
 from openpyxl import load_workbook
-from openpyxl.styles import PatternFill, Font
+from openpyxl.styles import *
 from datetime import datetime
 import calendar
 
 
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
-    if color == 'green':
-        font_style = Font(
-            name='Calibri',
-            charset=204,
-            family=2,
-            bold=False,
-            italic=False,
-            strike=False,
-            outline=False,
-            shadow=False,
-            color='FF92D050',  # Цвет шрифта в формате RGB
-            size=14.0,
-        )
+    value = None
+    # Определяем стиль шрифта
+    font_style = Font(
+        name='Calibri',
+        charset=204,
+        family=2,
+        bold=False,
+        italic=False,
+        strike=False,
+        outline=False,
+        shadow=False,
+        color='FF92D050',  # Цвет шрифта в формате RGB
+        size=14.0,
+    )
 
-        # Определяем стиль заливки (если нужно)
-        fill_style = PatternFill(
-            start_color='FF92D050',  # Цвет фона в формате RGB
-            end_color='FF92D050',
-            fill_type='solid'
-        )
-        return [font_style, fill_style]
+    # Определяем стиль заливки
+    fill_style = PatternFill(
+        start_color='FF92D050',  # Цвет фона в формате RGB
+        end_color='FF92D050',
+        fill_type='solid'
+    )
+    number_format = 'General'
+    # Определяем стиль границ
+    thin_border = Border(
+        left=Side(style='thin', color='000000'),
+        right=Side(style='thin', color='000000'),
+        top=Side(style='thin', color='000000'),
+        bottom=Side(style='thin', color='000000'),
+    )
+
+    # Определяем стиль выравнивания
+    alignment_style = Alignment(
+        horizontal='center',
+        vertical='center',
+        wrapText=True
+    )
+
+    # Определяем защиту ячейки
+    protection_style = Protection(
+        locked=True,
+        hidden=False
+    )
+    if color == 'green':
+        pass
     elif color == 'red':
-        pass
+        value = 1
+        font_style.color = 'FF0000'
+        fill_style.start_color = 'FF0000'
+        fill_style.end_color = 'FF0000'
     elif color == 'blue':
-        pass
+        value = 1
+        font_style.color = 'FF5B9BD5'
+        fill_style.start_color = 'FF5B9BD5'
+        fill_style.end_color = 'FF5B9BD5'
     elif color == 'orange':
-        pass
+        font_style.color = 'FFC000'
+        fill_style.start_color = 'FF92D050'
+        fill_style.end_color = 'FF92D050'
+    return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style,value]
 
 
 class DataCharts:

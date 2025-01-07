@@ -45,6 +45,9 @@ class CreateChart:
             self.file.column_dimensions[
                 new_column_letter].width = original_width
 
+            original_height = self.file.row_dimensions[cell.row].height
+            self.file.row_dimensions[new_cell.row].height = original_height
+
     # удаляем лишние звездочки до крайнего последнего столбца, лишние
     def remove(self, coll, count_remove):
         # удалеяем столбцы по коодинатам

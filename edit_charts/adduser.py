@@ -75,27 +75,21 @@ class AddUser:
                 self.file.unmerge_cells(str(merged))
 
     def add_colls(self, cell, i, new_value):
+        # стилизация для основной таблицы
         if cell.row <= len(self.table.get_users()) + 5 and cell.column > 3:
 
             # присваиваем скопированному последнему столбцу переменную, где будет все храниться
             new_cell = self.file.cell(row=cell.row + i,
                                       column=cell.column)
-            new_cell.value = None
-            new_cell.border = copy(cell.border)
-            new_cell.font = get_font_style('green')[0]
-            new_cell.fill = get_font_style('green')[1]
-            new_cell.number_format = copy(
-                cell.number_format)
-            new_cell.protection = copy(cell.protection)
-            new_cell.alignment = copy(cell.alignment)
-            original_width = \
-                self.file.column_dimensions[
-                    cell.column_letter].width
-            new_column_letter = self.file.cell(
-                row=cell.row,
-                column=cell.column + i).column_letter
-            self.file.column_dimensions[
-                new_column_letter].width = original_width
+            new_cell.border = get_font_style('green')[0]
+            new_cell.font = get_font_style('green')[1]
+            new_cell.fill = get_font_style('green')[2]
+            new_cell.number_format = get_font_style('green')[3]
+            new_cell.protection = get_font_style('green')[4]
+            new_cell.alignment = get_font_style('green')[5]
+            new_cell.value = get_font_style('green')[6]
+
+        # дополнительная
         else:
 
             # присваиваем скопированному последнему столбцу переменную, где будет все храниться
@@ -111,18 +105,19 @@ class AddUser:
                     cell.number_format)
                 new_cell.protection = copy(cell.protection)
                 new_cell.alignment = copy(cell.alignment)
-                original_width = \
-                    self.file.column_dimensions[
-                        cell.column_letter].width
-                new_column_letter = self.file.cell(
-                    row=cell.row,
-                    column=cell.column + i).column_letter
+            # копируем ширину ячейки
+            original_width = \
                 self.file.column_dimensions[
-                    new_column_letter].width = original_width
+                    cell.column_letter].width
+            new_column_letter = self.file.cell(
+                row=cell.row,
+                column=cell.column + i).column_letter
+            self.file.column_dimensions[
+                new_column_letter].width = original_width
 
-                # Копируем высоту строки
-                original_height = self.file.row_dimensions[cell.row].height
-                self.file.row_dimensions[new_cell.row].height = original_height
+            # Копируем высоту ячейки
+            original_height = self.file.row_dimensions[cell.row].height
+            self.file.row_dimensions[new_cell.row].height = original_height
 
     def copy_row(self, row):
         for i in range(1, 2):
