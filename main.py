@@ -290,8 +290,6 @@ class Main:
             reply_markup=new_markup
         )
 
-test
-
 # Main(sys.argv)
 Main()
 bot.infinity_polling(timeout=90, long_polling_timeout=5)
