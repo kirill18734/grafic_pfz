@@ -7,6 +7,7 @@ from edit_charts.create_new_chart import CreateChart
 from edit_charts.delete_user import DeleteUsers
 from edit_charts.data_file import DataCharts
 from edit_charts.adduser import AddUser
+from edit_charts.edit_smens import Editsmens
 
 # Отключаем предупреждения
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -22,6 +23,7 @@ class Main:
         self.state_stack = []  # Стек для хранения состояний
         self.selected_employees = getattr(self, 'selected_employees', set())
         self.user_id = None
+        self.data_smens = None
         self.selected_month = None
         self.call = None
         self.markup = None
@@ -86,32 +88,10 @@ class Main:
 
             elif self.call.data == 'sments':
                 self.state_stack.append(self.call.data)
-                # Создаем новую клавиатуру
-                self.add_del_sments()
-
+                self.smens()
             elif self.call.data == 'dop_smens':
                 self.state_stack.append(self.call.data)
-                bot.send_message(self.call.message.chat.id,
-                                 f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. "
-                                 f"Чтобы "
-                                 f"вернуться на шаг назад, используй команду /back. В начало /start \n Вы выбрали "
-                                 f"подработки.")
-
-            elif self.call.data == 'add_sments':
-                self.state_stack.append(self.call.data)
-                bot.send_message(self.call.message.chat.id,
-                                 f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. "
-                                 f"Чтобы "
-                                 f"вернуться на шаг назад, используй команду /back. В начало /start \n Добавление смены"
-                                 f".")
-
-            elif self.call.data == 'del_sments':
-                self.state_stack.append(self.call.data)
-                bot.send_message(self.call.message.chat.id,
-                                 f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. "
-                                 f"Чтобы "
-                                 f"вернуться на шаг назад, используй команду /back. В начало /start \n Убираем смену.")
-
+                self.smens()
             elif self.call.data == 'employees':
                 self.state_stack.append(self.call.data)
                 # Обработка кнопки "Сотрудники"
@@ -132,6 +112,13 @@ class Main:
                 else:
                     self.selected_employees.add(employee_name)
                 self.dell_employee()
+            elif self.call.data.startswith('user_'):
+                self.table = Editsmens()
+                month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '')
+
+                list_smens = self.table.smens(month, str(self.call.data).replace('user_', ''))
+                self.actualy_smens(list_smens)
+                # print(f'Вы выбрали пользователя: {self.call.data}')
             # если выбран сотрудник на удаление, то вызываем функию для удаления
             elif self.call.data == 'confirm_delete':
                 self.state_stack.append(self.call.data)
@@ -151,9 +138,6 @@ class Main:
 
             self.show_shifts_jobs_selection()
 
-        elif last_state in ['add_sments', 'del_sments']:
-
-            self.add_del_sments()
         elif last_state in ['add_employees', 'dell_employee', 'employees']:
             self.add_del_employees()
         else:
@@ -211,20 +195,6 @@ class Main:
             reply_markup=self.markup
 
         )
-
-    def add_del_sments(self):
-        new_markup = types.InlineKeyboardMarkup()
-        item2 = types.InlineKeyboardButton("Добавить смену", callback_data='add_sments')
-        item3 = types.InlineKeyboardButton("Убрать смену", callback_data='del_sments')
-        new_markup.add(item2, item3)
-
-        # Обновляем клавиатуру в том же сообщении
-        bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n Выберите опцию:",
-            chat_id=self.call.message.chat.id,
-            message_id=self.call.message.message_id,
-            reply_markup=new_markup)
 
     def add_del_employees(self):
         new_markup = types.InlineKeyboardMarkup()
@@ -289,6 +259,55 @@ class Main:
             message_id=self.call.message.message_id,
             reply_markup=new_markup
         )
+
+    def smens(self):
+        self.markup = types.InlineKeyboardMarkup()
+        buttons = []
+
+        # Получаем список пользователей
+        users = self.table_data.get_users()
+
+        for user in users:
+            # Используем имя пользователя в качестве callback_data
+            item = types.InlineKeyboardButton(user, callback_data=f'user_{user}')
+            buttons.append(item)
+
+        self.markup.add(*buttons)
+
+        bot.edit_message_text(
+            "Выберите сотрудника:",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+            reply_markup=self.markup
+        )
+
+    def actualy_smens(self, smens):
+        self.markup = types.InlineKeyboardMarkup()
+        buttons = []
+
+        for key, value in smens.items():
+            if value is None:
+                emoji = "❌"  # Красный крестик
+            elif value == 1:
+                emoji = "✅"  # Зеленая галочка
+            else:
+                emoji = "⏰"  # Знак будильника
+
+                # Создаем кнопку с текстом "ключ (эмодзи)"
+            button_text = f"{key} {emoji}"
+            item = types.InlineKeyboardButton(button_text, callback_data=str(key))
+            buttons.append(item)
+
+        self.markup.add(*buttons)
+
+        bot.edit_message_text(
+            "Выберите статус:",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+            reply_markup=self.markup
+        )
+
+
 
 # Main(sys.argv)
 Main()

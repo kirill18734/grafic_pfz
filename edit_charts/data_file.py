@@ -72,7 +72,7 @@ class DataCharts:
         self.list_months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май',
                             'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь',
                             'Декабрь']
-        self.file = load_workbook(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\test1.xlsx')  # загружаем файл
+        self.file = load_workbook(r'C:\Users\Лара\PycharmProjects\grafic_pfz\test1.xlsx')  # загружаем файл
         # крайний месяц
         self.last_list = self.file.worksheets[-1]
 
