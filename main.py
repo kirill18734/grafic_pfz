@@ -121,7 +121,6 @@ class Main:
             elif self.call.data.startswith('user_'):
                 self.table = Editsmens()
                 month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '')
-
                 self.status_dict = self.table.smens(month, str(self.call.data).replace('user_', ''))
                 self.actualy_smens()
                 # print(f'Вы выбрали пользователя: {self.call.data}')
@@ -140,18 +139,22 @@ class Main:
                 key = int(key)
                 if current_value == 'None':
                     self.status_dict[key] = 1
+                    self.actualy_smens()
                 elif current_value == '1':
                     self.status_dict[key] = None
+                    self.actualy_smens()
                 else:
                     # response_text = "Чтобы изменить подработку, перейдите, пожалуйста, в раздел 'подработки'."
-                    # bot.answer_callback_query(call.id, response_text, show_alert=True)
+                    # bot.answer_callback_query(call.id, response_text, show_alert=True
+                    # )
+                    self.selected_number = self.status_dict[key]
                     self.dop_smens()
 
-                self.actualy_smens()  # Обновляем кнопки
+                  # Обновляем кнопки
             elif self.call.data.startswith("number_"):
                 selected_number = int(call.data.split("_")[1])
                 self.selected_number = selected_number  # Сохраняем выбранный номер
-
+                self.dop_smens()
             elif call.data == 'cancel':
                 # Логика для отмены
                 self.actualy_smens()
