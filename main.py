@@ -20,6 +20,10 @@ bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
 class Main:
     # дополнительный аргумент, для создания нового листа
     def __init__(self, new_chart=None):
+        self.selected_number = None
+        self.status_dict = {}
+        self.smens = None
+        self.select_user = None
         self.state_stack = []  # Стек для хранения состояний
         self.selected_employees = getattr(self, 'selected_employees', set())
         self.user_id = None
@@ -87,11 +91,13 @@ class Main:
                 self.show_shifts_jobs_selection()
 
             elif self.call.data == 'sments':
+                self.smens = self.call.data
                 self.state_stack.append(self.call.data)
-                self.smens()
+                self.smens_users()
             elif self.call.data == 'dop_smens':
+                self.smens = self.call.data
                 self.state_stack.append(self.call.data)
-                self.smens()
+                self.smens_users()
             elif self.call.data == 'employees':
                 self.state_stack.append(self.call.data)
                 # Обработка кнопки "Сотрудники"
@@ -116,8 +122,8 @@ class Main:
                 self.table = Editsmens()
                 month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '')
 
-                list_smens = self.table.smens(month, str(self.call.data).replace('user_', ''))
-                self.actualy_smens(list_smens)
+                self.status_dict = self.table.smens(month, str(self.call.data).replace('user_', ''))
+                self.actualy_smens()
                 # print(f'Вы выбрали пользователя: {self.call.data}')
             # если выбран сотрудник на удаление, то вызываем функию для удаления
             elif self.call.data == 'confirm_delete':
@@ -127,7 +133,30 @@ class Main:
                     self.delete_user.delete(list(self.selected_employees), self.actualy_months)
                 else:
                     print('Никто не выбран, некого удалять')
+                # Обработка статусов
+            elif 'smens_' in self.call.data:
+                self.select_user = str(self.call.data).replace('smens_', '')
+                key, current_value = self.call.data.split('smens_')
+                key = int(key)
+                if current_value == 'None':
+                    self.status_dict[key] = 1
+                elif current_value == '1':
+                    self.status_dict[key] = None
+                else:
+                    # response_text = "Чтобы изменить подработку, перейдите, пожалуйста, в раздел 'подработки'."
+                    # bot.answer_callback_query(call.id, response_text, show_alert=True)
+                    self.dop_smens()
 
+                self.actualy_smens()  # Обновляем кнопки
+            elif self.call.data.startswith("number_"):
+                selected_number = int(call.data.split("_")[1])
+                self.selected_number = selected_number  # Сохраняем выбранный номер
+
+            elif call.data == 'cancel':
+                # Логика для отмены
+                self.actualy_smens()
+            elif call.data == 'save_smens':
+                pass
     def handle_back_state(self, last_state):
 
         if last_state in ['shifts_jobs', 'employees']:
@@ -260,7 +289,8 @@ class Main:
             reply_markup=new_markup
         )
 
-    def smens(self):
+
+    def smens_users(self):
         self.markup = types.InlineKeyboardMarkup()
         buttons = []
 
@@ -281,25 +311,25 @@ class Main:
             reply_markup=self.markup
         )
 
-    def actualy_smens(self, smens):
+    def actualy_smens(self):
         self.markup = types.InlineKeyboardMarkup()
         buttons = []
-
-        for key, value in smens.items():
+        for key, value in self.status_dict.items():
             if value is None:
                 emoji = "❌"  # Красный крестик
             elif value == 1:
                 emoji = "✅"  # Зеленая галочка
             else:
-                emoji = "⏰"  # Знак будильника
+                emoji = "🟠"  # Знак будильника
 
-                # Создаем кнопку с текстом "ключ (эмодзи)"
             button_text = f"{key} {emoji}"
-            item = types.InlineKeyboardButton(button_text, callback_data=str(key))
+            item = types.InlineKeyboardButton(button_text, callback_data=f"{key}smens_{value}")
             buttons.append(item)
 
         self.markup.add(*buttons)
-
+        # Добавляем кнопку "Удалить"
+        save_smens = InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
+        self.markup.add(save_smens)
         bot.edit_message_text(
             "Выберите статус:",
             chat_id=self.call.message.chat.id,
@@ -308,6 +338,25 @@ class Main:
         )
 
 
+    def dop_smens(self):
+        # Создаем кнопки от 1 до 12
+        for i in range(1, 13):
+            button_text = f"{i} {'✅' if self.selected_number == i else '❌'}"  # Зеленая галочка для выбранного номера
+            item = types.InlineKeyboardButton(button_text, callback_data=f"number_{i}")
+            self.markup.add(item)
+
+        # Добавляем кнопки "Отмена" и "Сохранить"
+        cancel_button = types.InlineKeyboardButton("❌ Отмена", callback_data='cancel')
+        save_button = types.InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
+        self.markup.add(cancel_button, save_button)
+
+        # Отправляем сообщение с кнопками
+        bot.edit_message_text(
+            "Выберите номер:",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+            reply_markup=self.markup
+        )
 
 # Main(sys.argv)
 Main()
