@@ -23,7 +23,10 @@ class Main:
         self.selected_number = None
         self.status_dict = {}
         self.smens = None
+        self.message_ids = []
         self.select_user = None
+        self.select_smens = None
+        self.key = None
         self.state_stack = []  # Стек для хранения состояний
         self.selected_employees = getattr(self, 'selected_employees', set())
         self.user_id = None
@@ -65,15 +68,14 @@ class Main:
         def handle_start_main(message):
 
             self.user_id = message.chat.id
+
+            bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
             self.show_month_selection()
 
         @bot.message_handler(commands=['back'])
         def handle_back(message):
-            if self.state_stack:
-                last_state = self.state_stack.pop()
-                self.handle_back_state(last_state)
-            else:
-                bot.send_message(message.chat.id, "Вы находитесь на начальном экране. Нельзя вернуться назад.")
+            last_state = self.state_stack.pop()
+            self.handle_back_state(last_state)
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
@@ -90,15 +92,11 @@ class Main:
                 # Создаем новую клавиатуру
                 self.show_shifts_jobs_selection()
 
-            elif self.call.data == 'sments':
+            elif self.call.data in ['smens', 'dop_smens']:
                 self.smens = self.call.data
                 self.state_stack.append(self.call.data)
                 self.smens_users()
-            elif self.call.data == 'dop_smens':
-                self.smens = self.call.data
-                self.state_stack.append(self.call.data)
-                self.smens_users()
-            elif self.call.data == 'employees':
+            elif self.call.data in ['employees', 'cancel_delete']:
                 self.state_stack.append(self.call.data)
                 # Обработка кнопки "Сотрудники"
                 self.add_del_employees()
@@ -133,40 +131,61 @@ class Main:
                 else:
                     print('Никто не выбран, некого удалять')
                 # Обработка статусов
-            elif 'smens_' in self.call.data:
-                self.select_user = str(self.call.data).replace('smens_', '')
-                key, current_value = self.call.data.split('smens_')
-                key = int(key)
-                if current_value == 'None':
-                    self.status_dict[key] = 1
-                    self.actualy_smens()
-                elif current_value == '1':
-                    self.status_dict[key] = None
-                    self.actualy_smens()
-                else:
-                    # response_text = "Чтобы изменить подработку, перейдите, пожалуйста, в раздел 'подработки'."
-                    # bot.answer_callback_query(call.id, response_text, show_alert=True
-                    # )
-                    self.selected_number = self.status_dict[key]
-                    self.dop_smens()
+            elif (self.smens + '_') in self.call.data:
+                self.select_user = str(self.call.data).replace((self.smens + '_'), '')
+                key, current_value = self.call.data.split((self.smens + '_'))
+                self.key = int(key)
+                if self.smens == 'smens':
+                    if current_value == 'None':
+                        self.status_dict[self.key] = 1
+                        self.actualy_smens()
+                    elif current_value == '1':
+                        self.status_dict[self.key] = None
+                        self.actualy_smens()
+                    else:
+                        response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
+                        bot.answer_callback_query(call.id, response_text, show_alert=True)
+                if self.smens == 'dop_smens':
+                    if current_value == '1':
+                        response_text = "Чтобы изменить смену, перейдите пожалуйста в раздел 'Смены'."
+                        bot.answer_callback_query(call.id, response_text, show_alert=True)
+                    else:
+                        self.selected_number = self.status_dict[self.key]
+                        self.dop_smens()
 
-                  # Обновляем кнопки
+                # Обновляем кнопки
             elif self.call.data.startswith("number_"):
                 selected_number = int(call.data.split("_")[1])
-                self.selected_number = selected_number  # Сохраняем выбранный номер
-                self.dop_smens()
+                # Проверяем, выбран ли номер
+                if self.selected_number == selected_number:
+                    self.selected_number = None  # Снимаем выбор, если номер уже выбран
+                else:
+                    self.selected_number = selected_number  # Сохраняем новый выбранный номер
+
+                self.dop_smens()  # Обновляем кнопки
             elif call.data == 'cancel':
                 # Логика для отмены
                 self.actualy_smens()
             elif call.data == 'save_smens':
-                pass
+                self.status_dict[self.key] = self.selected_number
+                response_text = "Подработка сохранена"
+                bot.answer_callback_query(call.id, response_text, show_alert=True
+                                          )
+
+                self.actualy_smens()
+            elif self.call.data == 'save_all_smens':
+                response_text = "Изменения сохранены."
+                bot.answer_callback_query(call.id, response_text, show_alert=True)
+                bot.delete_message(chat_id=self.call.message.chat.id, message_id=self.call.message.message_id)
+                self.show_month_selection()
+
     def handle_back_state(self, last_state):
 
         if last_state in ['shifts_jobs', 'employees']:
 
             self.show_sments_dop_sments()
 
-        elif last_state in ['sments', 'dop_smens']:
+        elif last_state in ['smens', 'dop_smens']:
 
             self.show_shifts_jobs_selection()
 
@@ -176,7 +195,6 @@ class Main:
             self.show_month_selection()
 
     def show_month_selection(self):
-
         self.markup = InlineKeyboardMarkup()
 
         buttons = []
@@ -198,8 +216,8 @@ class Main:
 
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start",
+            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nВыберете раздел:",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup)
@@ -208,7 +226,7 @@ class Main:
 
         self.markup = InlineKeyboardMarkup()
 
-        item2 = InlineKeyboardButton("Смены", callback_data='sments')
+        item2 = InlineKeyboardButton("Смены", callback_data='smens')
 
         item3 = InlineKeyboardButton("Подработки", callback_data='dop_smens')
 
@@ -216,9 +234,9 @@ class Main:
 
         bot.edit_message_text(
 
-            f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. Чтобы "
+            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
 
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n Выберите опцию:",
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
 
             chat_id=self.call.message.chat.id,
 
@@ -235,17 +253,22 @@ class Main:
         new_markup.add(item4, item5)
 
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n Выберите опцию:",
+            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=new_markup)
 
     def add_employees(self):
-        bot.send_message(self.call.message.chat.id,
-                         f"Вы находитесь в разделе: {self.selected_month}.\n Используй кнопки для навигации. Чтобы "
-                         f"вернуться на шаг назад, используй команду /back. В начало /start \n Напишите сотрудника "
-                         f"для добавления")
+        # Редактируем текущее сообщение, чтобы запросить имя сотрудника
+        bot.edit_message_text(
+            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nНапишите имя сотрудника "
+            f"для добавления",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id
+        )
+
         # Устанавливаем состояние ожидания ответа от пользователя
         bot.register_next_step_handler(self.call.message, self.process_employee_name)
 
@@ -254,10 +277,11 @@ class Main:
             employee_name = message.text  # Получаем введенное имя сотрудника
             add_users = AddUser()
             add_users.add(employee_name, self.actualy_months)
+            bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
             # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
-            bot.send_message(message.chat.id, f"Сотрудник {employee_name} добавлен.")
-        else:
-            self.handle_back_state('employees')
+            response_text = f"Сотрудник {employee_name} добавлен."
+            bot.answer_callback_query(self.call.id, response_text, show_alert=True)
+        self.handle_back_state('employees')
 
     def dell_employee(self):
 
@@ -282,21 +306,20 @@ class Main:
 
         # Добавляем кнопку "Удалить"
         delete_button = InlineKeyboardButton("🗑️ Удалить!", callback_data='confirm_delete')
-        new_markup.add(delete_button)
+        cancel_delete = InlineKeyboardButton("Отмена!", callback_data='cancel_delete')
+        new_markup.add(cancel_delete, delete_button)
 
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}. Используй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n Выберите сотрудников для удаления:",
+            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудников для удаления:",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=new_markup
         )
 
-
     def smens_users(self):
         self.markup = types.InlineKeyboardMarkup()
         buttons = []
-
         # Получаем список пользователей
         users = self.table_data.get_users()
 
@@ -308,7 +331,8 @@ class Main:
         self.markup.add(*buttons)
 
         bot.edit_message_text(
-            "Выберите сотрудника:",
+            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудника:",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
@@ -326,12 +350,12 @@ class Main:
                 emoji = "🟠"  # Знак будильника
 
             button_text = f"{key} {emoji}"
-            item = types.InlineKeyboardButton(button_text, callback_data=f"{key}smens_{value}")
+            item = types.InlineKeyboardButton(button_text, callback_data=f"{key}{self.smens}_{value}")
             buttons.append(item)
 
         self.markup.add(*buttons)
-        # Добавляем кнопку "Удалить"
-        save_smens = InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
+        # Добавляем кнопку "Сохранить"
+        save_smens = InlineKeyboardButton("💾 Сохранить!", callback_data='save_all_smens')
         self.markup.add(save_smens)
         bot.edit_message_text(
             "Выберите статус:",
@@ -340,12 +364,15 @@ class Main:
             reply_markup=self.markup
         )
 
-
     def dop_smens(self):
         self.markup = types.InlineKeyboardMarkup()
         # Создаем кнопки от 1 до 12
         for i in range(1, 13):
-            button_text = f"{i} {'✅' if self.selected_number == i else '❌'}"  # Зеленая галочка для выбранного номера
+            # Проверяем, выбран ли номер, и устанавливаем соответствующий текст кнопки
+            if self.selected_number == i:
+                button_text = f"{i} ✅"  # Зеленая галочка для выбранного номера
+            else:
+                button_text = f"{i} ❌"  # Красный крестик для невыбранного номера
             item = types.InlineKeyboardButton(button_text, callback_data=f"number_{i}")
             self.markup.add(item)
 
@@ -361,6 +388,7 @@ class Main:
             message_id=self.call.message.message_id,
             reply_markup=self.markup
         )
+
 
 # Main(sys.argv)
 Main()
