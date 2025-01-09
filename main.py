@@ -25,6 +25,7 @@ class Main:
         self.smens = None
         self.message_ids = []
         self.select_user = None
+        self.month = None
         self.select_smens = None
         self.key = None
         self.state_stack = []  # Стек для хранения состояний
@@ -96,7 +97,26 @@ class Main:
             last_state = self.state_stack.pop()
 
             bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+            if last_state == self.month:
+                for id_ in range(message.message_id - 25, message.message_id + 1):
+                    try:
+                        bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                    except telebot.apihelper.ApiTelegramException as e:
+                        if e.error_code == 400:
+                            # Сообщение не найдено, продолжаем цикл
+                            continue
+                        else:
+                            # Обработка других ошибок, если необходимо
+                            print(f"Ошибка при удалении сообщения: {e}")
 
+                # Удаляем текущее сообщение
+                try:
+                    bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+                except telebot.apihelper.ApiTelegramException as e:
+                    if e.error_code == 400:
+                        print("Сообщение для удаления не найдено.")
+                    else:
+                        print(f"Ошибка при удалении сообщения: {e}")
             self.handle_back_state(last_state)
 
         @bot.callback_query_handler(func=lambda call: True)
@@ -213,7 +233,7 @@ class Main:
 
         elif last_state in ['add_employees', 'dell_employee', 'employees']:
             self.add_del_employees()
-        else:
+        elif last_state == self.month:
             self.show_month_selection()
 
     def show_month_selection(self):
@@ -221,7 +241,8 @@ class Main:
         buttons = []
 
         for month in self.get_months():
-            item = InlineKeyboardButton(month, callback_data=month)
+            self.month = month
+            item = InlineKeyboardButton(month, callback_data=self.month)
 
             buttons.append(item)
 
@@ -377,8 +398,10 @@ class Main:
         # Добавляем кнопку "Сохранить"
         save_smens = InlineKeyboardButton("💾 Сохранить!", callback_data='save_all_smens')
         self.markup.add(save_smens)
+        smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         bot.edit_message_text(
-            "Выберите статус:",
+            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nРаздел '{smen}':\n❌ - выходной\n✅ - смена\n🟠 - подработка",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
@@ -403,7 +426,8 @@ class Main:
 
         # Отправляем сообщение с кнопками
         bot.edit_message_text(
-            "Выберите номер:",
+            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nРаздел 'Подработки\ч':\n❌ - не выбранные часы\n✅ - выбранные часы",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
