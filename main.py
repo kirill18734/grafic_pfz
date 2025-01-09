@@ -66,15 +66,36 @@ class Main:
 
         @bot.message_handler(commands=['start'])
         def handle_start_main(message):
-
             self.user_id = message.chat.id
+            # Удаляем сообщения в диапазоне
+            for id_ in range(message.message_id - 25, message.message_id + 1):
+                try:
+                    bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                except telebot.apihelper.ApiTelegramException as e:
+                    if e.error_code == 400:
+                        # Сообщение не найдено, продолжаем цикл
+                        continue
+                    else:
+                        # Обработка других ошибок, если необходимо
+                        print(f"Ошибка при удалении сообщения: {e}")
 
-            bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+            # Удаляем текущее сообщение
+            try:
+                bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+            except telebot.apihelper.ApiTelegramException as e:
+                if e.error_code == 400:
+                    print("Сообщение для удаления не найдено.")
+                else:
+                    print(f"Ошибка при удалении сообщения: {e}")
+
+            # После завершения цикла и удаления сообщений вызываем метод выбора месяца
             self.show_month_selection()
 
         @bot.message_handler(commands=['back'])
         def handle_back(message):
             last_state = self.state_stack.pop()
+            # bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
             self.handle_back_state(last_state)
 
         @bot.callback_query_handler(func=lambda call: True)
@@ -118,7 +139,8 @@ class Main:
                 self.dell_employee()
             elif self.call.data.startswith('user_'):
                 self.table = Editsmens()
-                month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '')
+                month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '').replace(
+                    'Следующий месяц (', '').replace(')', '')
                 self.status_dict = self.table.smens(month, str(self.call.data).replace('user_', ''))
                 self.actualy_smens()
                 # print(f'Вы выбрали пользователя: {self.call.data}')
@@ -200,13 +222,13 @@ class Main:
         buttons = []
 
         for month in self.get_months():
-            item = InlineKeyboardButton(month, callback_data=month)
+            item = InlineKeyboardButton(month, callback_data=month, parse_mode='HTML')
 
             buttons.append(item)
 
         self.markup = InlineKeyboardMarkup([buttons])
 
-        bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup)
+        bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup, parse_mode='HTML')
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
@@ -377,7 +399,7 @@ class Main:
             self.markup.add(item)
 
         # Добавляем кнопки "Отмена" и "Сохранить"
-        cancel_button = types.InlineKeyboardButton("❌ Отмена", callback_data='cancel')
+        cancel_button = types.InlineKeyboardButton("Отмена", callback_data='cancel')
         save_button = types.InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
         self.markup.add(cancel_button, save_button)
 
