@@ -342,6 +342,7 @@ class Main:
 
 
     def dop_smens(self):
+        self.markup = types.InlineKeyboardMarkup()
         # Создаем кнопки от 1 до 12
         for i in range(1, 13):
             button_text = f"{i} {'✅' if self.selected_number == i else '❌'}"  # Зеленая галочка для выбранного номера
