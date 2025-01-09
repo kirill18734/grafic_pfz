@@ -94,7 +94,8 @@ class Main:
         @bot.message_handler(commands=['back'])
         def handle_back(message):
             last_state = self.state_stack.pop()
-            # bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+
+            bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
             self.handle_back_state(last_state)
 
@@ -198,7 +199,6 @@ class Main:
             elif self.call.data == 'save_all_smens':
                 response_text = "Изменения сохранены."
                 bot.answer_callback_query(call.id, response_text, show_alert=True)
-                bot.delete_message(chat_id=self.call.message.chat.id, message_id=self.call.message.message_id)
                 self.show_month_selection()
 
     def handle_back_state(self, last_state):
@@ -218,17 +218,16 @@ class Main:
 
     def show_month_selection(self):
         self.markup = InlineKeyboardMarkup()
-
         buttons = []
 
         for month in self.get_months():
-            item = InlineKeyboardButton(month, callback_data=month, parse_mode='HTML')
+            item = InlineKeyboardButton(month, callback_data=month)
 
             buttons.append(item)
 
         self.markup = InlineKeyboardMarkup([buttons])
 
-        bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup, parse_mode='HTML')
+        bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup)
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
@@ -299,7 +298,6 @@ class Main:
             employee_name = message.text  # Получаем введенное имя сотрудника
             add_users = AddUser()
             add_users.add(employee_name, self.actualy_months)
-            bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
             # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
             response_text = f"Сотрудник {employee_name} добавлен."
             bot.answer_callback_query(self.call.id, response_text, show_alert=True)
