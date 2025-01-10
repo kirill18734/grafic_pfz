@@ -76,7 +76,7 @@ class Main:
         def handle_start_main(message):
             self.user_id = message.chat.id
             # Удаляем сообщения в диапазоне
-            for id_ in range(message.message_id - 25, message.message_id + 1):
+            for id_ in range(message.message_id - 10, message.message_id + 1):
                 try:
                     bot.delete_message(chat_id=message.chat.id, message_id=id_)
                 except telebot.apihelper.ApiTelegramException as e:
@@ -107,7 +107,7 @@ class Main:
             bot.delete_message(chat_id=message.chat.id,
                                message_id=message.message_id)
             if last_state == self.month:
-                for id_ in range(message.message_id - 25,
+                for id_ in range(message.message_id - 10,
                                  message.message_id + 1):
                     try:
                         bot.delete_message(chat_id=message.chat.id,
@@ -181,15 +181,22 @@ class Main:
                                                         'user_', ''))
                 self.actualy_smens()
                 # print(f'Вы выбрали пользователя: {self.call.data}')
-            # если выбран сотрудник на удаление, то вызываем функию для удаления
+            # если выбран сотрудник на удаление, то вызываем функию для
+            # удаления
             elif self.call.data == 'confirm_delete':
                 self.state_stack.append(self.call.data)
                 if self.selected_employees:
                     self.delete_user = DeleteUsers()
                     self.delete_user.delete(list(self.selected_employees),
                                             self.actualy_months)
+                    response_text = "Сотрудник(и) удален(ы)"
+                    bot.answer_callback_query(call.id, response_text,
+                                              show_alert=True)
+                    self.add_del_employees()
                 else:
-                    print('Никто не выбран, некого удалять')
+                    response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
+                    bot.answer_callback_query(call.id, response_text,
+                                              show_alert=True)
                 # Обработка статусов
             elif (self.smens + '_') in self.call.data:
                 self.select_user = str(self.call.data).replace(
@@ -237,11 +244,13 @@ class Main:
                                           )
 
                 self.actualy_smens()
-            elif self.call.data == 'save_all_smens':
+            elif self.call.data in ['save_all_smens']:
                 response_text = "Изменения сохранены."
                 bot.answer_callback_query(call.id, response_text,
                                           show_alert=True)
-                self.show_month_selection()
+                self.smens_users()
+            elif self.call.data in ['cancel_all_smens']:
+                self.smens_users()
 
     def handle_back_state(self, last_state):
 
@@ -253,8 +262,8 @@ class Main:
 
             self.show_shifts_jobs_selection()
 
-        elif last_state in ['add_employees', 'dell_employee', 'employees']:
-            self.add_del_employees()
+        elif last_state in ['add_employees', 'dell_employee']:
+            self.А()
         elif last_state == self.month:
             self.show_month_selection()
 
@@ -346,11 +355,13 @@ class Main:
             employee_name = message.text  # Получаем введенное имя сотрудника
             add_users = AddUser()
             add_users.add(employee_name, self.actualy_months)
+            bot.delete_message(chat_id=message.chat.id,
+                               message_id=message.message_id)
             # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
             response_text = f"Сотрудник {employee_name} добавлен."
             bot.answer_callback_query(self.call.id, response_text,
                                       show_alert=True)
-        self.handle_back_state('employees')
+        self.add_del_employees()
 
     def dell_employee(self):
 
@@ -432,7 +443,9 @@ class Main:
         # Добавляем кнопку "Сохранить"
         save_smens = InlineKeyboardButton("💾 Сохранить!",
                                           callback_data='save_all_smens')
-        self.markup.add(save_smens)
+        cancel_smens = InlineKeyboardButton("Отмена!",
+                                            callback_data='cancel_all_smens')
+        self.markup.add(cancel_smens, save_smens)
         smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         bot.edit_message_text(
             f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
@@ -445,7 +458,7 @@ class Main:
     def dop_smens(self):
         self.markup = types.InlineKeyboardMarkup()
         # Создаем кнопки от 1 до 12
-        for i in range(1, 13):
+        for i in range(2, 13):
             # Проверяем, выбран ли номер, и устанавливаем соответствующий текст кнопки
             if self.selected_number == i:
                 button_text = f"{i} ✅"  # Зеленая галочка для выбранного номера
