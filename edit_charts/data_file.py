@@ -2,6 +2,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import *
 from datetime import datetime
 import calendar
+from config.auto_search_dir import path_to_test1_json
 
 
 # функция для получeния стилизации нужных ячеек
@@ -61,10 +62,12 @@ def get_font_style(color):
         fill_style.start_color = 'FF5B9BD5'
         fill_style.end_color = 'FF5B9BD5'
     elif color == 'orange':
-        font_style.color = 'FFC000'
-        fill_style.start_color = 'FF92D050'
-        fill_style.end_color = 'FF92D050'
-    return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style,value]
+        font_style.color = 'FF000000'
+        fill_style.start_color = 'FFC000'
+        fill_style.end_color = 'FFC000'
+        alignment_style.horizontal = 'right'  # Устанавливаем выравнивание по правому краю
+        alignment_style.vertical = 'center'  # Устанавливаем вертикальное выравнивание по центру (или 'top', 'bottom' по вашему выбору)
+    return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
 
 
 class DataCharts:
@@ -72,7 +75,7 @@ class DataCharts:
         self.list_months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май',
                             'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь',
                             'Декабрь']
-        self.file = load_workbook(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\test1.xlsx')  # загружаем файл
+        self.file = load_workbook(path_to_test1_json)  # загружаем файл
         # крайний месяц
         self.last_list = self.file.worksheets[-1]
 

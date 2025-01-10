@@ -1,5 +1,5 @@
 import re
-
+from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 from edit_charts.delete_user import DeleteUsers
 from copy import copy
@@ -148,7 +148,7 @@ class AddUser:
             # обратно все склеиваем
             self.merge(last_user[-1] + 2)
             self.edit_summ()
-            self.table.file.save(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\test1.xlsx')
+            self.table.file.save(path_to_test1_json)
 
 # test = Add_user()
 # test.add('test')
