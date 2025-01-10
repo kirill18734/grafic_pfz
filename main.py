@@ -1,5 +1,6 @@
 from telebot import types
-from telebot.types import BotCommand, InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import BotCommand, InlineKeyboardMarkup, \
+    InlineKeyboardButton
 import telebot
 from config.auto_search_dir import data_config
 import urllib3
@@ -32,7 +33,8 @@ class Main:
         self.call = None
         self.markup = None
         self.actualy_months = None
-        # если передался параметр на создание графика, то выполняем фукнцию, которая создаться график на новый месяц
+        # если передался параметр на создание графика, то выполняем фукнцию,
+        # которая создаться график на новый месяц
         self.input_enabled = False  # Флаг для контроля ввода
         if new_chart:
             CreateChart()
@@ -40,19 +42,27 @@ class Main:
         self.table_data = None
         self.start_main()
 
-    # начальные кнопки, если нет, нового месяца, но используем текущий, или если он есть, то выводим 2 кнопки
+    # начальные кнопки, если нет, нового месяца, но используем текущий,
+    # или если он есть, то выводим 2 кнопки
     def get_months(self):
         self.table_data = DataCharts()
-        # если крайний лист, будет совпадать с текущим месяцем, то значит будет одна кнопка для текущего месяца,
-        # если нет, то 2 для нового графика и для старого
-        if self.table_data.list_months[self.table_data.data_months()[2]] in str(self.table_data.last_list.title):
-            self.actualy_months = [self.table_data.list_months[self.table_data.data_months()[2]]]
-            return [f'Текущий месяц ({self.table_data.list_months[self.table_data.data_months()[2]]})']
+        # если крайний лист, будет совпадать с текущим месяцем, то значит
+        # будет одна кнопка для текущего месяца, если нет, то 2 для нового
+        # графика и для старого
+        if self.table_data.list_months[
+            self.table_data.data_months()[2]] in str(
+            self.table_data.last_list.title):
+            self.actualy_months = [
+                self.table_data.list_months[self.table_data.data_months()[2]]]
+            return [
+                f'<u>Текущий месяц ({self.table_data.list_months[self.table_data.data_months()[2]]})</u>']
         else:
-            self.actualy_months = [self.table_data.list_months[self.table_data.data_months()[2]],
-                                   self.table_data.list_months[self.table_data.data_months()[3]]]
-            return [f'Текущий месяц ({self.table_data.list_months[self.table_data.data_months()[2]]})',
-                    f'Следующий месяц ({self.table_data.list_months[self.table_data.data_months()[3]]})']
+            self.actualy_months = [
+                self.table_data.list_months[self.table_data.data_months()[2]],
+                self.table_data.list_months[self.table_data.data_months()[3]]]
+            return [
+                f'Текущий месяц ({self.table_data.list_months[self.table_data.data_months()[2]]})',
+                f'Следующий месяц ({self.table_data.list_months[self.table_data.data_months()[3]]})']
 
     def start_main(self):
         commands = [
@@ -73,7 +83,8 @@ class Main:
                 last_state = self.state_stack.pop()
                 self.handle_back_state(last_state)
             else:
-                bot.send_message(message.chat.id, "Вы находитесь на начальном экране. Нельзя вернуться назад.")
+                bot.send_message(message.chat.id,
+                                 "Вы находитесь на начальном экране. Нельзя вернуться назад.")
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
@@ -120,8 +131,11 @@ class Main:
                 self.dell_employee()
             elif self.call.data.startswith('user_'):
                 self.table = Editsmens()
-                month = str(self.selected_month).replace('Текущий месяц (', '').replace(')', '')
-                self.status_dict = self.table.smens(month, str(self.call.data).replace('user_', ''))
+                month = str(self.selected_month).replace('Текущий месяц (',
+                                                         '').replace(')', '')
+                self.status_dict = self.table.smens(month,
+                                                    str(self.call.data).replace(
+                                                        'user_', ''))
                 self.actualy_smens()
                 # print(f'Вы выбрали пользователя: {self.call.data}')
             # если выбран сотрудник на удаление, то вызываем функию для удаления
@@ -129,7 +143,8 @@ class Main:
                 self.state_stack.append(self.call.data)
                 if self.selected_employees:
                     self.delete_user = DeleteUsers()
-                    self.delete_user.delete(list(self.selected_employees), self.actualy_months)
+                    self.delete_user.delete(list(self.selected_employees),
+                                            self.actualy_months)
                 else:
                     print('Никто не выбран, некого удалять')
                 # Обработка статусов
@@ -150,7 +165,7 @@ class Main:
                     self.selected_number = self.status_dict[key]
                     self.dop_smens()
 
-                  # Обновляем кнопки
+                # Обновляем кнопки
             elif self.call.data.startswith("number_"):
                 selected_number = int(call.data.split("_")[1])
                 self.selected_number = selected_number  # Сохраняем выбранный номер
@@ -160,6 +175,7 @@ class Main:
                 self.actualy_smens()
             elif call.data == 'save_smens':
                 pass
+
     def handle_back_state(self, last_state):
 
         if last_state in ['shifts_jobs', 'employees']:
@@ -188,11 +204,13 @@ class Main:
 
         self.markup = InlineKeyboardMarkup([buttons])
 
-        bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup)
+        bot.send_message(self.user_id, "Выберите месяц:",
+                         reply_markup=self.markup)
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
-        item2 = InlineKeyboardButton("Смены / подработки", callback_data='shifts_jobs')
+        item2 = InlineKeyboardButton("Смены / подработки",
+                                     callback_data='shifts_jobs')
         item3 = InlineKeyboardButton("Сотрудники", callback_data='employees')
         self.markup.add(item2, item3)
 
@@ -230,8 +248,10 @@ class Main:
 
     def add_del_employees(self):
         new_markup = types.InlineKeyboardMarkup()
-        item4 = types.InlineKeyboardButton("Добавить сотрудника", callback_data='add_employees')
-        item5 = types.InlineKeyboardButton("Убрать сотрудника", callback_data='dell_employee')
+        item4 = types.InlineKeyboardButton("Добавить сотрудника",
+                                           callback_data='add_employees')
+        item5 = types.InlineKeyboardButton("Убрать сотрудника",
+                                           callback_data='dell_employee')
         new_markup.add(item4, item5)
 
         bot.edit_message_text(
@@ -247,7 +267,8 @@ class Main:
                          f"вернуться на шаг назад, используй команду /back. В начало /start \n Напишите сотрудника "
                          f"для добавления")
         # Устанавливаем состояние ожидания ответа от пользователя
-        bot.register_next_step_handler(self.call.message, self.process_employee_name)
+        bot.register_next_step_handler(self.call.message,
+                                       self.process_employee_name)
 
     def process_employee_name(self, message):
         if message.text not in ['/back', '/start']:
@@ -255,7 +276,8 @@ class Main:
             add_users = AddUser()
             add_users.add(employee_name, self.actualy_months)
             # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
-            bot.send_message(message.chat.id, f"Сотрудник {employee_name} добавлен.")
+            bot.send_message(message.chat.id,
+                             f"Сотрудник {employee_name} добавлен.")
         else:
             self.handle_back_state('employees')
 
@@ -270,18 +292,21 @@ class Main:
             # Берем два сотрудника за раз
             row_buttons = []
             for j in range(2):
-                if i + j < len(employees):  # Проверяем, чтобы не выйти за пределы списка
+                if i + j < len(
+                        employees):  # Проверяем, чтобы не выйти за пределы списка
                     employee = employees[i + j]
                     is_selected = employee in self.selected_employees
                     button_text = f"{employee} {'❌' if is_selected else '✅'}"
-                    item = InlineKeyboardButton(button_text, callback_data=f'select_employee_{employee}')
+                    item = InlineKeyboardButton(button_text,
+                                                callback_data=f'select_employee_{employee}')
                     row_buttons.append(item)
 
             # Добавляем кнопки в строку
             new_markup.row(*row_buttons)
 
         # Добавляем кнопку "Удалить"
-        delete_button = InlineKeyboardButton("🗑️ Удалить!", callback_data='confirm_delete')
+        delete_button = InlineKeyboardButton("🗑️ Удалить!",
+                                             callback_data='confirm_delete')
         new_markup.add(delete_button)
 
         bot.edit_message_text(
@@ -292,7 +317,6 @@ class Main:
             reply_markup=new_markup
         )
 
-
     def smens_users(self):
         self.markup = types.InlineKeyboardMarkup()
         buttons = []
@@ -302,7 +326,8 @@ class Main:
 
         for user in users:
             # Используем имя пользователя в качестве callback_data
-            item = types.InlineKeyboardButton(user, callback_data=f'user_{user}')
+            item = types.InlineKeyboardButton(user,
+                                              callback_data=f'user_{user}')
             buttons.append(item)
 
         self.markup.add(*buttons)
@@ -326,12 +351,14 @@ class Main:
                 emoji = "🟠"  # Знак будильника
 
             button_text = f"{key} {emoji}"
-            item = types.InlineKeyboardButton(button_text, callback_data=f"{key}smens_{value}")
+            item = types.InlineKeyboardButton(button_text,
+                                              callback_data=f"{key}smens_{value}")
             buttons.append(item)
 
         self.markup.add(*buttons)
         # Добавляем кнопку "Удалить"
-        save_smens = InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
+        save_smens = InlineKeyboardButton("💾 Сохранить!",
+                                          callback_data='save_smens')
         self.markup.add(save_smens)
         bot.edit_message_text(
             "Выберите статус:",
@@ -340,18 +367,20 @@ class Main:
             reply_markup=self.markup
         )
 
-
     def dop_smens(self):
         self.markup = types.InlineKeyboardMarkup()
         # Создаем кнопки от 1 до 12
         for i in range(1, 13):
             button_text = f"{i} {'✅' if self.selected_number == i else '❌'}"  # Зеленая галочка для выбранного номера
-            item = types.InlineKeyboardButton(button_text, callback_data=f"number_{i}")
+            item = types.InlineKeyboardButton(button_text,
+                                              callback_data=f"number_{i}")
             self.markup.add(item)
 
         # Добавляем кнопки "Отмена" и "Сохранить"
-        cancel_button = types.InlineKeyboardButton("❌ Отмена", callback_data='cancel')
-        save_button = types.InlineKeyboardButton("💾 Сохранить!", callback_data='save_smens')
+        cancel_button = types.InlineKeyboardButton("❌ Отмена",
+                                                   callback_data='cancel')
+        save_button = types.InlineKeyboardButton("💾 Сохранить!",
+                                                 callback_data='save_smens')
         self.markup.add(cancel_button, save_button)
 
         # Отправляем сообщение с кнопками
@@ -361,6 +390,7 @@ class Main:
             message_id=self.call.message.message_id,
             reply_markup=self.markup
         )
+
 
 # Main(sys.argv)
 Main()
