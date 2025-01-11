@@ -31,9 +31,10 @@ path_to_python_exe = find_file_in_project('python.exe',
 # Ищем файл config.json и получаем его путь
 path_to_config_json = find_file_in_project('config.json',
                                            path_to_project_folder)
-# Ищем файл config.json и получаем его путь
-path_to_test1_json = find_file_in_project('test1.xlsx',
-                                          path_to_project_folder)
+# # Ищем файл config.json и получаем его путь
+# path_to_test1_json = find_file_in_project('test1.xlsx',
+#                                           path_to_project_folder)
+path_to_test1_json =  r"C:\Users\kiraf\OneDrive\Документы\Документыдляработы\Общее\График_работы.xlsx"
 
 
 # Преобразуем содержимое файла

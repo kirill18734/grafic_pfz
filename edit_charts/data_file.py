@@ -3,7 +3,8 @@ from openpyxl.styles import *
 from datetime import datetime
 import calendar
 from config.auto_search_dir import path_to_test1_json
-
+import subprocess
+import time
 
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
@@ -89,6 +90,22 @@ class DataCharts:
             else:
                 break
         return users
+    def powershell(self):
+
+        # Путь к вашему Excel файлу
+        file_path = path_to_test1_json
+
+        # Команда для открытия PowerShell с правами администратора и запуска Excel
+        command = f"Start-Process excel.exe '{file_path}' -Verb runAs -WindowStyle Hidden"
+
+        # Открываем PowerShell с правами администратора
+        subprocess.Popen(["powershell.exe", "-Command", command])
+
+        # Ждем 10 секунд
+        time.sleep(15)
+
+        # Закрываем Excel (если он открыт)
+        subprocess.call(["powershell.exe", "-Command", "Get-Process excel | Stop-Process -Force"])
 
     def data_months(self):
         # Получаем текущую дату

@@ -1,4 +1,6 @@
 from copy import copy
+
+from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 
 
@@ -55,7 +57,7 @@ class CreateChart:
         # в последнем столбце указываем звездочку
         self.file.cell(row=1, column=coll - 1).value = '*'
         self.table_data.file.save(
-            r'test1.xlsx')
+            path_to_test1_json)
         # проставляем актуальные дни недели
         self.days_week(-count_remove)
         # очищаем таблицу
@@ -132,7 +134,7 @@ class CreateChart:
             if self.table_data.list_months[self.table_data.data_months()[3]] in sheet.title:
                 self.table_data.file.remove(sheet)  # Удаляем лист c
         self.table_data.file.save(
-            r'test1.xlsx')
+            path_to_test1_json)
         # Создаем копию крайнего месяца
         self.file = self.table_data.file.copy_worksheet(self.table_data.last_list)
         # изменяем название страницы (следующий месяц)
@@ -165,4 +167,4 @@ class CreateChart:
                               end_column=last_coll + self.table_data.data_months()[1])
 
         self.table_data.file.save(
-            r'test1.xlsx')
+            path_to_test1_json)

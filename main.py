@@ -9,7 +9,7 @@ from edit_charts.delete_user import DeleteUsers
 from edit_charts.data_file import DataCharts
 from edit_charts.adduser import AddUser
 from edit_charts.edit_smens import Editsmens
-
+from edit_charts.get_img_xl import Image
 # Отключаем предупреждения
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -143,6 +143,10 @@ class Main:
                 self.state_stack.append(self.call.data)
                 # Сохраняем выбранный месяц
                 self.selected_month = self.call.data
+                self.month = str(self.selected_month).replace('Текущий месяц (',
+                                                              '').replace(')',
+                                                                          '').replace(
+                    'Следующий месяц (', '').replace(')', '')
                 # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
                 self.show_sments_dop_sments()
 
@@ -155,6 +159,11 @@ class Main:
                 self.smens = self.call.data
                 self.state_stack.append(self.call.data)
                 self.smens_users()
+            # elif self.call.data == 'get_image':
+            #     self.state_stack.append(self.call.data)
+            #     image = Image()
+            #     # image.get_image(self.month)
+            #     image.get_image('Декабрь')
             elif self.call.data in ['employees', 'cancel_delete']:
                 self.state_stack.append(self.call.data)
                 # Обработка кнопки "Сотрудники"
@@ -177,10 +186,7 @@ class Main:
                 self.dell_employee()
             elif self.call.data.startswith('user_'):
                 self.table = Editsmens()
-                self.month = str(self.selected_month).replace('Текущий месяц (',
-                                                              '').replace(')',
-                                                                          '').replace(
-                    'Следующий месяц (', '').replace(')', '')
+
                 self.select_user = str(self.call.data).replace(
                     'user_', '')
                 self.status_dict = self.table.smens(self.month, self.select_user)
@@ -292,11 +298,13 @@ class Main:
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
-        item2 = InlineKeyboardButton("Смены / подработки",
+        item1 = InlineKeyboardButton("Смены / подработки",
                                      callback_data='shifts_jobs')
-        item3 = InlineKeyboardButton("Сотрудники", callback_data='employees')
-        self.markup.add(item2, item3)
+        item2 = InlineKeyboardButton("Сотрудники", callback_data='employees')
+        item3 = InlineKeyboardButton("Посмотреть график", callback_data='get_image',url = data_config["URL"])
 
+        self.markup.add(item1, item2)
+        self.markup.add(item3)
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
             f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
@@ -309,11 +317,11 @@ class Main:
 
         self.markup = InlineKeyboardMarkup()
 
-        item2 = InlineKeyboardButton("Смены", callback_data='smens')
+        item1 = InlineKeyboardButton("Смены", callback_data='smens')
 
-        item3 = InlineKeyboardButton("Подработки", callback_data='dop_smens')
+        item2 = InlineKeyboardButton("Подработки", callback_data='dop_smens')
 
-        self.markup.add(item2, item3)
+        self.markup.add(item1, item2)
 
         bot.edit_message_text(
 

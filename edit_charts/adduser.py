@@ -9,6 +9,7 @@ class AddUser:
     def __init__(self):
         self.file = None
         self.merged_ranges = None
+        self.last_user_undex = None
         self.name = None
         self.table = DataCharts()
         self.del_tabe = DeleteUsers()
@@ -16,15 +17,17 @@ class AddUser:
     def edit_summ(self):
         count = 5
         rows_to_update = []
+
         # Проходим по каждой строке в файле
         for row in self.file.iter_rows():
             # Извлекаем значения ячеек в строке и сохраняем их в список
             row_values = [cell.value for cell in row]
 
             # Проверяем, содержится ли хотя бы один пользователь и формула '=SUMIF' в значениях строки
-            if any(user in str(row_values) for user in self.table.get_users()) and '=SUMIF' in str(row_values):
+            if (user for user in self.table.get_users() if user in str(row_values)) and '=SUMIF' in str(row_values):
                 # Если условие выполнено, выполняем нужные действия (например, печатаем что-то)
                 rows_to_update.append(row)
+
             # Заменяем значения в определенных ячейках
         for row in rows_to_update:
             for cell in row:
@@ -54,7 +57,7 @@ class AddUser:
         self.file.merge_cells(start_row=row_merge, start_column=2, end_row=row_merge,
                               end_column=3)
         # также отдельно объединяем новые ячейки (дополнительная таблица)
-        row_merge = self.table.last_list.max_row - 1
+        row_merge = last_index
         self.file.merge_cells(start_row=row_merge, start_column=13, end_row=row_merge,
                               end_column=14)
         self.file.merge_cells(start_row=row_merge, start_column=15, end_row=row_merge,
@@ -120,6 +123,7 @@ class AddUser:
             self.file.row_dimensions[new_cell.row].height = original_height
 
     def copy_row(self, row):
+
         for i in range(1, 2):
             for row in self.file.iter_rows(min_row=row, max_row=row):
                 for cell in row:  # получаем каждую ячейку
@@ -131,24 +135,25 @@ class AddUser:
         for month in months:
             self.file = self.table.file[month]
             # определяем крайнию строчку , где последний пользователь
-            last_user = [cell.row for row in
+            self.last_user_undex = [cell.row for row in
                          self.file.iter_rows(max_col=13, min_col=13, min_row=len(self.table.get_users()) + 10) for cell
                          in
                          row if cell.value is not None and cell.value != '' and cell.value != ' ']
-
+            print(self.last_user_undex)
             self.unmerge(len(self.table.get_users()) + 4)
             # вставляем новую строчку в основной стобцец
             self.file.insert_rows(len(self.table.get_users()) + 5)
             # вставляем новую строчку в дополнительный столбец
-            self.file.insert_rows(last_user[-1] + 2)
+            self.file.insert_rows(self.last_user_undex[-1] + 2)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (основной)
             self.copy_row(len(self.table.get_users()) + 4)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
-            self.copy_row(last_user[-1] + 1)
+            self.copy_row(self.last_user_undex[-1] + 1)
             # обратно все склеиваем
-            self.merge(last_user[-1] + 2)
+            self.merge(self.last_user_undex[-1] + 2)
+            # вызываем функцию для обновления формул автоподсчета
             self.edit_summ()
             self.table.file.save(path_to_test1_json)
-
+            self.table.powershell()
 # test = Add_user()
 # test.add('test')
