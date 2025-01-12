@@ -6,6 +6,7 @@ from config.auto_search_dir import path_to_test1_json
 import subprocess
 import time
 
+
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
     value = None
@@ -90,23 +91,35 @@ class DataCharts:
             else:
                 break
         return users
-    def powershell(self):
 
-        # Путь к вашему Excel файлу
-        file_path = path_to_test1_json
+    def start_onedrive(self):
+        # Команда для запуска связанных процессов OneDrive
+        script_text = """
+        Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe';
+        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDriveFileCoAuthoring.exe';
+        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\FileSyncHelper.exe';
+        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDriveSyncClient.exe'
+        """
+        completed_process = subprocess.run(['powershell', '-Command', script_text], capture_output=True)
 
-        # Команда для открытия PowerShell с правами администратора и запуска Excel
-        command = f"Start-Process excel.exe '{file_path}' -Verb runAs -WindowStyle Hidden"
+        if completed_process.returncode == 0:
+            print("OneDrive и связанные процессы запущены успешно.")
+        else:
+            print("Ошибка при запуске OneDrive:", completed_process.stderr.decode())
+    def stop_onedrive(self):
+        # Команда для остановки всех связанных процессов OneDrive
+        script_text = """
+        Stop-Process -Name OneDrive -Force;
+        #Stop-Process -Name 'OneDriveFileCoAuthoring' -Force;
+        #Stop-Process -Name 'FileSyncHelper' -Force;
+        #Stop-Process -Name 'OneDriveSyncClient' -Force
+        """
+        completed_process = subprocess.run(['powershell', '-Command', script_text], capture_output=True)
 
-        # Открываем PowerShell с правами администратора
-        subprocess.Popen(["powershell.exe", "-Command", command])
-
-        # Ждем 10 секунд
-        time.sleep(15)
-
-        # Закрываем Excel (если он открыт)
-        subprocess.call(["powershell.exe", "-Command", "Get-Process excel | Stop-Process -Force"])
-
+        if completed_process.returncode == 0:
+            print("OneDrive и связанные процессы остановлены успешно.")
+        else:
+            print("Ошибка при остановке OneDrive:", completed_process.stderr.decode())
     def data_months(self):
         # Получаем текущую дату
         current_date = datetime.now()

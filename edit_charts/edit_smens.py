@@ -21,6 +21,16 @@ class Editsmens:
                 count += 1
         return result
 
+    def get_days(self, month):
+        self.file = self.table.file[month]
+        result = {}
+        count = 1
+        for row in self.file.iter_rows(min_col=4, max_row=3, min_row=3):
+            for cell in row:
+                result[count] = cell.value
+                count += 1
+        return result
+
     def edit_smens(self, month, user, new_smens):
         self.file = self.table.file[month]
 
@@ -57,12 +67,6 @@ class Editsmens:
                 cell.alignment = get_font_style(color)[5]
                 if color != 'orange':
                     cell.value = get_font_style(color)[6]
+
         self.table.file.save(path_to_test1_json)
-
-
-# test = Editsmens()
-# test.edit_smens('Январь', 'Кирилл',
-#                 {1: None, 2: None, 3: 1, 4: 1, 5: None, 6: 3, 7: None, 8: None, 9: None, 10: 2, 11: None, 12: None,
-#                  13: None, 14: 6, 15: None, 16: None, 17: None, 18: None, 19: None, 20: None, 21: None, 22: None,
-#                  23: None, 24: None, 25: 1, 26: None, 27: None, 28: 1, 29: None, 30: None, 31: None}
-#                 )
+        self.table.file.close()

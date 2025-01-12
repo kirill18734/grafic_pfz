@@ -1,3 +1,5 @@
+from time import sleep
+
 from telebot import types
 from telebot.types import BotCommand, InlineKeyboardMarkup, \
     InlineKeyboardButton
@@ -10,6 +12,7 @@ from edit_charts.data_file import DataCharts
 from edit_charts.adduser import AddUser
 from edit_charts.edit_smens import Editsmens
 from edit_charts.get_img_xl import Image
+
 # Отключаем предупреждения
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -138,6 +141,7 @@ class Main:
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
+
             self.call = call
             if 'Текущий месяц' in self.call.data or 'Следующий месяц' in self.call.data:
                 self.state_stack.append(self.call.data)
@@ -149,7 +153,10 @@ class Main:
                     'Следующий месяц (', '').replace(')', '')
                 # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
                 self.show_sments_dop_sments()
-
+            # elif self.call.data == 'button1':
+            #     self.state_stack.append(self.call.data)
+            #     # Создаем новую клавиатуру
+            #     self.show_sments_dop_sments()
             elif self.call.data == 'shifts_jobs':
                 self.state_stack.append(self.call.data)
                 # Создаем новую клавиатуру
@@ -159,11 +166,14 @@ class Main:
                 self.smens = self.call.data
                 self.state_stack.append(self.call.data)
                 self.smens_users()
-            # elif self.call.data == 'get_image':
-            #     self.state_stack.append(self.call.data)
-            #     image = Image()
-            #     # image.get_image(self.month)
-            #     image.get_image('Декабрь')
+            elif self.call.data == 'get_image':
+                self.state_stack.append(self.call.data)
+                image = Image()
+                # Создаем новую клавиатуру с кнопками
+                self.temp()
+                image.get_image(self.month)
+                self.image()
+                # image.get_image('Декабрь')
             elif self.call.data in ['employees', 'cancel_delete']:
                 self.state_stack.append(self.call.data)
                 # Обработка кнопки "Сотрудники"
@@ -197,12 +207,16 @@ class Main:
             elif self.call.data == 'confirm_delete':
                 self.state_stack.append(self.call.data)
                 if self.selected_employees:
+                    # self.table_data.stop_onedrive()
+                    # sleep(3)
                     self.delete_user = DeleteUsers()
                     self.delete_user.delete(list(self.selected_employees),
                                             self.actualy_months)
                     response_text = "Сотрудник(и) удален(ы)"
                     bot.answer_callback_query(call.id, response_text,
                                               show_alert=True)
+                    # sleep(5)
+                    # self.table_data.start_onedrive()
                     self.add_del_employees()
                 else:
                     response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
@@ -249,19 +263,26 @@ class Main:
                 self.actualy_smens()
             elif call.data == 'save_smens':
                 self.status_dict[self.key] = self.selected_number
+                # self.table_data.stop_onedrive()
+                # sleep(3)
+                # self.table.edit_smens(self.month, self.select_user, self.status_dict)
                 response_text = "Подработка сохранена"
                 bot.answer_callback_query(call.id, response_text,
                                           show_alert=True
                                           )
-
+                # sleep(5)
+                # self.table_data.start_onedrive()
                 self.actualy_smens()
             elif self.call.data in ['save_all_smens']:
-
+                # self.table_data.stop_onedrive()
+                # sleep(3)
                 self.table.edit_smens(self.month, self.select_user, self.status_dict)
 
                 response_text = "Изменения сохранены."
                 bot.answer_callback_query(call.id, response_text,
                                           show_alert=True)
+                # sleep(5)
+                # self.table_data.start_onedrive()
                 self.smens_users()
             elif self.call.data in ['cancel_all_smens']:
                 self.smens_users()
@@ -280,6 +301,20 @@ class Main:
             self.add_del_employees()
         elif last_state == self.month:
             self.show_month_selection()
+
+    def temp(self):
+
+        # Обновляем текст и клавиатуру в том же сообщении
+        bot.edit_message_text(
+            text="Картинка выгружается, пожалуйста ожидайте. В течении минуты она появиться",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+        )
+
+    def image(self):
+        # Отправляем изображение
+        with open(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\months.png', 'rb') as photo:
+            message = bot.send_photo(self.call.message.chat.id, photo)
 
     def show_month_selection(self):
         self.markup = InlineKeyboardMarkup()
@@ -301,7 +336,7 @@ class Main:
         item1 = InlineKeyboardButton("Смены / подработки",
                                      callback_data='shifts_jobs')
         item2 = InlineKeyboardButton("Сотрудники", callback_data='employees')
-        item3 = InlineKeyboardButton("Посмотреть график", callback_data='get_image',url = data_config["URL"])
+        item3 = InlineKeyboardButton("Посмотреть график", callback_data='get_image')  # url=data_config["URL"]
 
         self.markup.add(item1, item2)
         self.markup.add(item3)
@@ -367,7 +402,10 @@ class Main:
                                        self.process_employee_name)
 
     def process_employee_name(self, message):
-        if message.text not in ['/back', '/start']:
+        users = DataCharts()
+        if message.text not in ['/back', '/start'] and message.text not in users.get_users():
+            # self.table_data.stop_onedrive()
+            # sleep(5)
             employee_name = message.text  # Получаем введенное имя сотрудника
             add_users = AddUser()
             add_users.add(employee_name, self.actualy_months)
@@ -377,13 +415,23 @@ class Main:
             response_text = f"Сотрудник {employee_name} добавлен."
             bot.answer_callback_query(self.call.id, response_text,
                                       show_alert=True)
+            # sleep(5)
+            # self.table_data.start_onedrive()
             self.add_del_employees()
-        else:
+        elif message.text in ['/back', '/start']:
             bot.delete_message(chat_id=message.chat.id,
                                message_id=message.message_id)
             response_text = f"Введите имя, которое не содержит /back или /start"
             bot.answer_callback_query(self.call.id, response_text,
                                       show_alert=True)
+            self.add_del_employees()
+        else:
+            bot.delete_message(chat_id=message.chat.id,
+                               message_id=message.message_id)
+            response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
+            bot.answer_callback_query(self.call.id, response_text,
+                                      show_alert=True)
+            self.add_del_employees()
 
     def dell_employee(self):
         self.table_data = DataCharts()
@@ -447,6 +495,8 @@ class Main:
 
     def actualy_smens(self):
         self.markup = types.InlineKeyboardMarkup()
+        table = Editsmens()
+        get_days = table.get_days(self.month)
         buttons = []
         for key, value in self.status_dict.items():
             if value is None:
@@ -456,7 +506,7 @@ class Main:
             else:
                 emoji = "🟠"  # Знак будильника
 
-            button_text = f"{key} {emoji}"
+            button_text = f"{key}д ({get_days[key]}) {emoji}"
             item = types.InlineKeyboardButton(button_text,
                                               callback_data=f"{key}{self.smens}_{value}")
             buttons.append(item)
@@ -483,9 +533,9 @@ class Main:
         for i in range(2, 13):
             # Проверяем, выбран ли номер, и устанавливаем соответствующий текст кнопки
             if self.selected_number == i:
-                button_text = f"{i} ✅"  # Зеленая галочка для выбранного номера
+                button_text = f"{i}ч ✅"  # Зеленая галочка для выбранного номера
             else:
-                button_text = f"{i} ❌"  # Красный крестик для невыбранного номера
+                button_text = f"{i}ч ❌"  # Красный крестик для невыбранного номера
             item = types.InlineKeyboardButton(button_text,
                                               callback_data=f"number_{i}")
             self.markup.add(item)

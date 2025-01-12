@@ -1,4 +1,6 @@
 import re
+from time import sleep
+
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 from edit_charts.delete_user import DeleteUsers
@@ -139,7 +141,7 @@ class AddUser:
                          self.file.iter_rows(max_col=13, min_col=13, min_row=len(self.table.get_users()) + 10) for cell
                          in
                          row if cell.value is not None and cell.value != '' and cell.value != ' ']
-            print(self.last_user_undex)
+
             self.unmerge(len(self.table.get_users()) + 4)
             # вставляем новую строчку в основной стобцец
             self.file.insert_rows(len(self.table.get_users()) + 5)
@@ -154,6 +156,6 @@ class AddUser:
             # вызываем функцию для обновления формул автоподсчета
             self.edit_summ()
             self.table.file.save(path_to_test1_json)
-            self.table.powershell()
+            self.table.file.close()
 # test = Add_user()
 # test.add('test')

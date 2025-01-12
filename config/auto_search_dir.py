@@ -34,9 +34,9 @@ path_to_config_json = find_file_in_project('config.json',
 # # Ищем файл config.json и получаем его путь
 # path_to_test1_json = find_file_in_project('test1.xlsx',
 #                                           path_to_project_folder)
-path_to_test1_json =  r"C:\Users\kiraf\OneDrive\Документы\Документыдляработы\Общее\График_работы.xlsx"
+# path_to_test1_json =  r"C:\Users\kiraf\OneDrive\Документы\График_работы2.xlsx"
 
-
+path_to_test1_json =  r"G:\Мой диск\График_работы2.xlsx"
 # Преобразуем содержимое файла
 with open(path_to_config_json, 'r', encoding='utf-8') as file:
     data_config = json.load(file)
