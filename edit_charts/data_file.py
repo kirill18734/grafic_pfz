@@ -3,8 +3,7 @@ from openpyxl.styles import *
 from datetime import datetime
 import calendar
 from config.auto_search_dir import path_to_test1_json
-import subprocess
-import time
+
 
 
 # функция для получeния стилизации нужных ячеек
@@ -52,7 +51,7 @@ def get_font_style(color):
         hidden=False
     )
     if color == 'green':
-        pass
+        return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
     elif color == 'red':
         value = 1
         font_style.color = 'FF0000'
@@ -92,34 +91,6 @@ class DataCharts:
                 break
         return users
 
-    def start_onedrive(self):
-        # Команда для запуска связанных процессов OneDrive
-        script_text = """
-        Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe';
-        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDriveFileCoAuthoring.exe';
-        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\FileSyncHelper.exe';
-        #Start-Process 'C:\\Program Files\\Microsoft OneDrive\\OneDriveSyncClient.exe'
-        """
-        completed_process = subprocess.run(['powershell', '-Command', script_text], capture_output=True)
-
-        if completed_process.returncode == 0:
-            print("OneDrive и связанные процессы запущены успешно.")
-        else:
-            print("Ошибка при запуске OneDrive:", completed_process.stderr.decode())
-    def stop_onedrive(self):
-        # Команда для остановки всех связанных процессов OneDrive
-        script_text = """
-        Stop-Process -Name OneDrive -Force;
-        #Stop-Process -Name 'OneDriveFileCoAuthoring' -Force;
-        #Stop-Process -Name 'FileSyncHelper' -Force;
-        #Stop-Process -Name 'OneDriveSyncClient' -Force
-        """
-        completed_process = subprocess.run(['powershell', '-Command', script_text], capture_output=True)
-
-        if completed_process.returncode == 0:
-            print("OneDrive и связанные процессы остановлены успешно.")
-        else:
-            print("Ошибка при остановке OneDrive:", completed_process.stderr.decode())
     def data_months(self):
         # Получаем текущую дату
         current_date = datetime.now()
@@ -153,7 +124,7 @@ class DataCharts:
         new_index = month % len(self.list_months)
         # количество дней в следующем месяце, разницу в днях,  индекс текущего месяца, индекс следующего месяца
         difference = [current_month_days,
-                      (next_month_days - current_month_days) + 5, month - 1, new_index, first_weekday_next_month]
+                      (next_month_days - current_month_days) + 3, month -1 , new_index, first_weekday_next_month]
         return difference
 
     # функция для получения нужные данных

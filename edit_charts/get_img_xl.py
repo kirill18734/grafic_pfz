@@ -46,5 +46,3 @@ class Image:
         finally:
             # Закрытие драйвера
             self.driver.quit()
-test = Image()
-test.get_image('Январь')

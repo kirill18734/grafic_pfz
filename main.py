@@ -1,3 +1,7 @@
+import datetime
+import json
+import os
+
 from telebot import types
 from telebot.types import BotCommand, InlineKeyboardMarkup, \
     InlineKeyboardButton
@@ -10,18 +14,54 @@ from edit_charts.data_file import DataCharts
 from edit_charts.adduser import AddUser
 from edit_charts.edit_smens import Editsmens
 from edit_charts.get_img_xl import Image
+import threading
+import time
+import schedule
+
+# Создаем экземпляр бота
+bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'], parse_mode='HTML')
+user_ids = set()
+USER_IDS_FILE = 'user_ids.json'
+
+
+def load_user_ids():
+    if os.path.exists(USER_IDS_FILE):
+        with open(USER_IDS_FILE, 'r') as file:
+            return set(json.load(file))
+    return set()
+
+
+def save_user_ids(user_ids):
+    with open(USER_IDS_FILE, 'w') as file:
+        json.dump(list(user_ids), file)
+
+
+def create_new_chart():
+    new = CreateChart()
+    result = new.new_chart()
+    for user_id in load_user_ids():
+        if result:
+            bot.send_message(user_id, 'Создан график на новый месяц, необходимо заполнить')
+        else:
+            bot.send_message(user_id,
+                             'Была попытка создать новый график, что то пошло не так, необходимо проверить')
+
 
 # Отключаем предупреждения
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Создаем экземпляр бота
-bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
-                      parse_mode='HTML')
+
+def job():
+    if datetime.datetime.now().day == 20:
+        create_new_chart()
+
+
+schedule.every().day.at("12:00").do(job)
 
 
 class Main:
     # дополнительный аргумент, для создания нового листа
-    def __init__(self, new_chart=None):
+    def __init__(self):
         self.selected_number = None
         self.status_dict = {}
         self.smens = None
@@ -41,8 +81,6 @@ class Main:
         self.actualy_months = None
         # если передался параметр на создание графика, то выполняем фукнцию, которая создаться график на новый месяц
         self.input_enabled = False  # Флаг для контроля ввода
-        if new_chart:
-            CreateChart()
         self.delete_user = None
         self.table_data = None
         self.start_main()
@@ -74,6 +112,8 @@ class Main:
         @bot.message_handler(commands=['start'])
         def handle_start_main(message):
             self.user_id = message.chat.id
+            user_ids.add(self.user_id)
+            save_user_ids(user_ids)
             # Удаляем сообщения в диапазоне
             for id_ in range(message.message_id - 10, message.message_id + 1):
                 try:
@@ -85,7 +125,6 @@ class Main:
 
         @bot.message_handler(commands=['back'])
         def handle_back(message):
-            print(self.state_stack)
             last_state = None
             try:
                 last_state = self.state_stack.pop()
@@ -134,8 +173,6 @@ class Main:
                 self.state_stack.append(self.call.data)
                 self.smens_users()
             elif self.call.data == 'get_image':
-                print(self.call.data)
-                print(self.state_stack)
                 self.state_stack.append(self.call.data)
                 image = Image()
                 # Создаем новую клавиатуру с кнопками
@@ -270,14 +307,6 @@ class Main:
         # Отправляем изображение
         with open(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\months.png', 'rb') as photo:
             bot.send_photo(self.call.message.chat.id, photo)
-
-        # # Создаем клавиатуру
-        # self.markup = types.InlineKeyboardMarkup()
-        # item1 = types.InlineKeyboardButton("           Назад           ", callback_data='start_command')
-        # self.markup.add(item1)
-        #
-        # # Отправляем пустое сообщение с клавиатурой
-        # bot.send_message(self.call.message.chat.id, "ㅤ", reply_markup=self.markup)
 
     def show_month_selection(self):
         self.markup = InlineKeyboardMarkup()
@@ -534,6 +563,14 @@ class Main:
         )
 
 
-# Main(sys.argv)
+def run_schedule():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+# Запускаем планировщик в отдельном потоке
+schedule_thread = threading.Thread(target=run_schedule)
+schedule_thread.start()
 Main()
 bot.infinity_polling(timeout=90, long_polling_timeout=5)

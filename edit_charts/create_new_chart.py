@@ -21,7 +21,6 @@ class CreateChart:
         self.weekdays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
         self.list_days_2 = {28: "AE", 29: "AF", 30: "AG", 31: "AH",
                             32: "AI", 33: "AJ", 34: "AK"}
-        self.new_chart()  # запускаем основную функцию по созданию нового месяца
 
     def add_colls(self, cell, i, new_value):
         # присваиваем скопированному последнему столбцу переменную, где будет все храниться
@@ -58,7 +57,6 @@ class CreateChart:
         self.file.cell(row=1, column=coll - 1).value = '*'
         self.table_data.file.save(
             path_to_test1_json)
-        self.table_data.file.close()
         # проставляем актуальные дни недели
         self.days_week(-count_remove)
         # очищаем таблицу
@@ -84,9 +82,13 @@ class CreateChart:
             for col in range(4, self.file.max_column + 1):
                 cell = self.file.cell(row=row, column=col)
                 cell.value = None  # Устанавливаем значение на None
-                cell.font = get_font_style('green')[0]  # Применяем стиль шрифта
-                cell.fill = get_font_style('green')[
-                    1]  # Применяем стиль заливки # Устанавливаем значение на None
+                cell.border = get_font_style('green')[0]
+                cell.font = get_font_style('green')[1]
+                cell.fill = get_font_style('green')[2]
+                cell.number_format = get_font_style('green')[3]
+                cell.protection = get_font_style('green')[4]
+                cell.alignment = get_font_style('green')[5]
+                cell.value = get_font_style('green')[6]
 
     # простовляем актуальные дни недели для нового месяца
     def days_week(self, count_add):
@@ -130,6 +132,8 @@ class CreateChart:
 
     # новый график
     def new_chart(self):
+        if self.table_data.last_list.title == self.table_data.list_months[self.table_data.data_months()[3]]:
+            return 'Добавление не требуется, данный месяц уже есть'
         # Перед созданием нового листа, сначала удаляем старый с таким же названием
         for sheet in self.table_data.file.worksheets:
             if self.table_data.list_months[self.table_data.data_months()[3]] in sheet.title:
@@ -137,7 +141,7 @@ class CreateChart:
 
         self.table_data.file.save(
             path_to_test1_json)
-        self.table_data.file.close()
+
         # Создаем копию крайнего месяца
         self.file = self.table_data.file.copy_worksheet(self.table_data.last_list)
         # изменяем название страницы (следующий месяц)
@@ -151,7 +155,7 @@ class CreateChart:
         last_coll = len(self.table_data.ineration_all_last_table(min_row=2, max_row=2))
         # перед добавление или удалением новых ячеек , сначала нужно разъеденить все ячейки, которые взаимодиествуют
         # при добавлении новых
-        self.file.unmerge_cells(start_row=2, start_column=2, end_row=2, end_column=last_coll)
+        self.file.unmerge_cells(start_row=2, start_column=2, end_row=2, end_column=int(self.file.max_column))
         # дальше определяем что нужно сделать с ячейки, добавить или удалить по нашему выводу:
         # если будет вычитание , то преобразовываем в положительно число
         count_edit_coll = abs(self.table_data.data_months()[1])
@@ -166,9 +170,12 @@ class CreateChart:
             self.days_week(self.table_data.data_months()[1])
 
         # после всех обработок объединяем обратно
-        self.file.merge_cells(start_row=2, start_column=2, end_row=2,
-                              end_column=last_coll + self.table_data.data_months()[1])
+        self.file.merge_cells(start_row=2, start_column=2, end_row=2 ,end_column=int(self.file.max_column))
 
         self.table_data.file.save(
             path_to_test1_json)
-        self.table_data.file.close()
+        table = DataCharts()
+        if self.table_data.list_months[self.table_data.data_months()[3]] in table.last_list.title:
+            return True
+        else:
+            return False
