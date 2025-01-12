@@ -25,6 +25,7 @@ class Main:
         self.selected_number = None
         self.status_dict = {}
         self.smens = None
+        self.image_message_id = None
         self.message_ids = []
         self.select_user = None
         self.month = None
@@ -74,66 +75,40 @@ class Main:
         def handle_start_main(message):
             self.user_id = message.chat.id
             # Удаляем сообщения в диапазоне
-            for id_ in range(message.message_id - 20, message.message_id + 1):
+            for id_ in range(message.message_id - 10, message.message_id + 1):
                 try:
                     bot.delete_message(chat_id=message.chat.id, message_id=id_)
-                except telebot.apihelper.ApiTelegramException as e:
-                    if e.error_code == 400:
-                        # Сообщение не найдено, продолжаем цикл
-                        continue
-                    else:
-                        # Обработка других ошибок, если необходимо
-                        print(f"Ошибка при удалении сообщения: {e}")
-
-            # Удаляем текущее сообщение
-            try:
-                bot.delete_message(chat_id=message.chat.id,
-                                   message_id=message.message_id)
-            except telebot.apihelper.ApiTelegramException as e:
-                if e.error_code == 400:
-                    print("Сообщение для удаления не найдено.")
-                else:
-                    print(f"Ошибка при удалении сообщения: {e}")
-
+                except:
+                    continue
             # После завершения цикла и удаления сообщений вызываем метод выбора месяца
             self.show_month_selection()
 
         @bot.message_handler(commands=['back'])
         def handle_back(message):
+            print(self.state_stack)
+            last_state = None
             try:
                 last_state = self.state_stack.pop()
-
-                bot.delete_message(chat_id=message.chat.id,
-                                   message_id=message.message_id)
-                if last_state == self.month:
-                    for id_ in range(message.message_id - 20,
-                                     message.message_id + 1):
-                        try:
-                            bot.delete_message(chat_id=message.chat.id,
-                                               message_id=id_)
-                        except telebot.apihelper.ApiTelegramException as e:
-                            if e.error_code == 400:
-                                # Сообщение не найдено, продолжаем цикл
-                                continue
-                            else:
-                                # Обработка других ошибок, если необходимо
-                                print(f"Ошибка при удалении сообщения: {e}")
-                self.handle_back_state(last_state)
-
             except:
-                for id_ in range(message.message_id - 20,
+                pass
+            bot.delete_message(chat_id=message.chat.id,
+                               message_id=message.message_id)
+            if self.month in last_state:
+                for id_ in range(message.message_id - 10,
                                  message.message_id + 1):
                     try:
                         bot.delete_message(chat_id=message.chat.id,
                                            message_id=id_)
-                    except telebot.apihelper.ApiTelegramException as e:
-                        if e.error_code == 400:
-                            # Сообщение не найдено, продолжаем цикл
-                            continue
-                        else:
-                            # Обработка других ошибок, если необходимо
-                            print(f"Ошибка при удалении сообщения: {e}")
-                self.show_month_selection()
+                    except:
+                        continue
+                self.handle_back_state(last_state)
+            elif last_state == 'get_image':
+                handle_start_main(message)
+
+        @bot.callback_query_handler(func=lambda call: call.data == 'start_command')
+        def handle_start_command(call):
+            # Вызываем команду /start
+            handle_start_main(call.message)
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
@@ -159,6 +134,8 @@ class Main:
                 self.state_stack.append(self.call.data)
                 self.smens_users()
             elif self.call.data == 'get_image':
+                print(self.call.data)
+                print(self.state_stack)
                 self.state_stack.append(self.call.data)
                 image = Image()
                 # Создаем новую клавиатуру с кнопками
@@ -264,29 +241,29 @@ class Main:
             elif self.call.data in ['cancel_all_smens']:
                 self.smens_users()
 
+    # обработчик для команды /back
     def handle_back_state(self, last_state):
-
-        if last_state in ['shifts_jobs', 'employees']:
+        if last_state in ['shifts_jobs', 'employees', 'add_employees']:
 
             self.show_sments_dop_sments()
-
         elif last_state in ['smens', 'dop_smens']:
-
             self.show_shifts_jobs_selection()
-
-        elif last_state in ['add_employees', 'dell_employee']:
+        elif last_state in ['dell_employee']:
             self.add_del_employees()
-        elif last_state == self.month:
+        else:
             self.show_month_selection()
 
     def temp(self):
 
         # Обновляем текст и клавиатуру в том же сообщении
         bot.edit_message_text(
-            text="Картинка выгружается, пожалуйста ожидайте. В течении минуты она появиться. Если картинка "
-                 "некорректно подгрузилась, попробуйте еще раз.",
+            text=f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+                 f"вернуться на шаг назад, используй команду /back. В начало /start\n\nКартинка выгружается, "
+                 f"пожалуйста ожидайте. В течении минуты она появиться. Если картинка "
+                 f"некорректно подгрузилась, попробуйте еще раз.\n\nСсылка на источник: <a href='{data_config['URL']}'>График работы</a>",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
+            disable_web_page_preview=True
         )
 
     def image(self):
@@ -294,20 +271,46 @@ class Main:
         with open(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\months.png', 'rb') as photo:
             bot.send_photo(self.call.message.chat.id, photo)
 
+        # # Создаем клавиатуру
+        # self.markup = types.InlineKeyboardMarkup()
+        # item1 = types.InlineKeyboardButton("           Назад           ", callback_data='start_command')
+        # self.markup.add(item1)
+        #
+        # # Отправляем пустое сообщение с клавиатурой
+        # bot.send_message(self.call.message.chat.id, "ㅤ", reply_markup=self.markup)
+
     def show_month_selection(self):
         self.markup = InlineKeyboardMarkup()
         buttons = []
 
         for month in self.get_months():
-            self.month = month
-            item = InlineKeyboardButton(month, callback_data=self.month)
-
+            item = InlineKeyboardButton(month, callback_data=month)
             buttons.append(item)
 
         self.markup = InlineKeyboardMarkup([buttons])
 
-        bot.send_message(self.user_id, "Выберите месяц:",
-                         reply_markup=self.markup)
+        # Проверяем, есть ли уже сообщение для редактирования
+        if hasattr(self, 'message_id') and self.message_id is not None:
+            try:
+                bot.edit_message_text(
+                    f"Выберите месяц:",
+                    chat_id=self.call.message.chat.id,
+                    message_id=self.message_id,
+                    reply_markup=self.markup
+                )
+            except Exception as e:
+                print(f"Ошибка при редактировании сообщения: {e}")
+                # Если редактирование не удалось, отправляем новое сообщение
+                self.send_new_month_selection_message()
+        else:
+            # Если нет message_id, отправляем новое сообщение
+            self.send_new_month_selection_message()
+
+    def send_new_month_selection_message(self):
+        # Отправляем новое сообщение с кнопками
+        message = bot.send_message(self.user_id, "Выберите месяц:", reply_markup=self.markup)
+        # Сохраняем message_id для дальнейшего редактирования
+        self.message_id = message.message_id
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
@@ -351,19 +354,19 @@ class Main:
         )
 
     def add_del_employees(self):
-        new_markup = types.InlineKeyboardMarkup()
-        item4 = types.InlineKeyboardButton("Добавить сотрудника",
-                                           callback_data='add_employees')
-        item5 = types.InlineKeyboardButton("Убрать сотрудника",
-                                           callback_data='dell_employee')
-        new_markup.add(item4, item5)
+        self.markup = InlineKeyboardMarkup()
+        item4 = InlineKeyboardButton("Добавить сотрудника",
+                                     callback_data='add_employees')
+        item5 = InlineKeyboardButton("Убрать сотрудника",
+                                     callback_data='dell_employee')
+        self.markup.add(item4, item5)
 
         bot.edit_message_text(
             f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
             f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
-            reply_markup=new_markup)
+            reply_markup=self.markup)
 
     def add_employees(self):
         # Редактируем текущее сообщение, чтобы запросить имя сотрудника
@@ -393,12 +396,9 @@ class Main:
                                       show_alert=True)
 
             self.add_del_employees()
-        elif message.text in ['/back', '/start']:
+        elif message.text in ['/back']:
             bot.delete_message(chat_id=message.chat.id,
                                message_id=message.message_id)
-            response_text = f"Введите имя, которое не содержит /back или /start"
-            bot.answer_callback_query(self.call.id, response_text,
-                                      show_alert=True)
             self.add_del_employees()
         else:
             bot.delete_message(chat_id=message.chat.id,

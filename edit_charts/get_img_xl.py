@@ -38,7 +38,7 @@ class Image:
                 lambda d: d.find_element(By.XPATH, f"//span[@class='docs-sheet-tab-name' and text()='{month}']")
             )
             element.click()  # Клик на элемент
-            sleep(40)
+            sleep(5)
             # Сделать скриншот и сохранить его в файл
             self.driver.save_screenshot(r'C:\Users\kiraf\PycharmProjects\grafic_pfz\months.png')
         except Exception as e:

@@ -1,5 +1,3 @@
-from time import sleep
-
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts
 import re
