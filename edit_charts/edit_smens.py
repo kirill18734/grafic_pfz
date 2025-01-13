@@ -1,3 +1,5 @@
+from openpyxl.drawing import fill
+
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 from send_to_telegram_email.send_to_TG_email import test_mode
@@ -17,8 +19,12 @@ class Editsmens:
         count = 1
         for row in self.file.iter_rows(min_col=4, max_row=find_row[0], min_row=find_row[0]):
             for cell in row:
-                result[count] = cell.value
+                if cell.fill.start_color.rgb == 'FF00B0F0':
+                    result[f'{count}i'] = cell.value
+                else:
+                    result[count] = cell.value
                 count += 1
+
         return result
 
     def get_days(self, month):
@@ -70,3 +76,7 @@ class Editsmens:
 
         self.table.file.save(path_to_test1_json)
         self.table.file.close()
+
+
+# test = Editsmens()
+# print(test.smens('Январь', 'Кирилл'))

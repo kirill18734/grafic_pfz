@@ -64,10 +64,13 @@ class Main:
     def __init__(self):
         self.selected_number = None
         self.status_dict = {}
+        self.select_invent = None
         self.smens = None
         self.image_message_id = None
         self.message_ids = []
         self.select_user = None
+        self.select_new_invent = None
+        self.select_n = None
         self.month = None
         self.select_smens = None
         self.key = None
@@ -171,6 +174,7 @@ class Main:
             elif self.call.data in ['smens', 'dop_smens']:
                 self.smens = self.call.data
                 self.state_stack.append(self.call.data)
+
                 self.smens_users()
             elif self.call.data == 'get_image':
                 self.state_stack.append(self.call.data)
@@ -223,30 +227,53 @@ class Main:
                     response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
                     bot.answer_callback_query(call.id, response_text,
                                               show_alert=True)
+
                 # Обработка статусов
             elif (self.smens + '_') in self.call.data:
-                key, current_value = self.call.data.split((self.smens + '_'))
-                self.key = int(key)
+                key, day, smens, current_value = self.call.data.split('_')
+                self.key = key
                 if self.smens == 'smens':
-                    if current_value == 'None':
-                        self.status_dict[self.key] = 1
+                    if current_value == 'None' and 'i' not in str(key) and 'сб' not in str(day) and 'вс' not in str(
+                            day):
+                        self.status_dict[int(self.key)] = 1
                         self.actualy_smens()
-                    elif current_value == '1':
-                        self.status_dict[self.key] = None
+                    elif current_value == '1' and 'i' not in str(key) and 'сб' not in str(day) and 'вс' not in str(day):
+                        self.status_dict[int(self.key)] = None
                         self.actualy_smens()
+                    elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(key))  and current_value == '1':
+                        self.select_invent = key
+                        self.select_n = None
+
+                        self.invent()
+                    elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(key)) and current_value == 'None':
+                        self.select_invent = key
+                        self.select_n = 1
+                        self.invent()
                     else:
                         response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
                         bot.answer_callback_query(call.id, response_text,
                                                   show_alert=True)
-                if self.smens == 'dop_smens':
-                    if current_value == '1':
+
+                elif self.smens == 'dop_smens':
+                    if current_value == '1' :
                         response_text = "Чтобы изменить смену, перейдите пожалуйста в раздел 'Смены'."
                         bot.answer_callback_query(call.id, response_text,
                                                   show_alert=True)
                     else:
                         self.selected_number = self.status_dict[self.key]
                         self.dop_smens()
-
+            if call.data == "invent_selected":
+                self.select_new_invent = f'{self.select_invent}i'
+                self.select_invent = self.select_new_invent
+                self.invent()
+            elif call.data == "invent_not_selected":
+                if type(self.select_invent) == str:
+                    self.select_new_invent = int(
+                        str(self.select_invent).replace('i', ''))  # Убираем элемент из выбранных
+                else:
+                    self.select_new_invent = f'{self.select_invent}i'
+                self.select_invent = self.select_new_invent
+                self.invent()
                 # Обновляем кнопки
             elif self.call.data.startswith("number_"):
                 selected_number = int(call.data.split("_")[1])
@@ -257,6 +284,19 @@ class Main:
                     self.selected_number = selected_number  # Сохраняем новый выбранный номер
 
                 self.dop_smens()  # Обновляем кнопки
+            elif call.data == 'save_invent':
+                if 'i' not in self.key:
+                    self.key = int(self.key)
+
+                # print(int(self.key))
+                self.status_dict = {key if key != self.key else self.select_new_invent: value for key, value in
+                                    self.status_dict.items()}
+                self.status_dict[self.select_new_invent] = self.select_n
+                print(self.status_dict)
+
+                self.actualy_smens()
+            elif call.data == 'cancel_invent':
+                self.actualy_smens()
             elif call.data == 'cancel':
                 # Логика для отмены
                 self.actualy_smens()
@@ -502,17 +542,23 @@ class Main:
         table = Editsmens()
         get_days = table.get_days(self.month)
         buttons = []
+        print(self.smens)
         for key, value in self.status_dict.items():
+
             if value is None:
                 emoji = "❌"  # Красный крестик
-            elif value == 1:
+            elif value == 1 and type(key) == int:
                 emoji = "✅"  # Зеленая галочка
+            elif value == 1 and type(key) == str:
+                emoji = "🟦"  # Зеленая галочка
             else:
                 emoji = "🟠"  # Знак будильника
 
-            button_text = f"{key}д ({get_days[key]}) {emoji}"
+            button_text = f"{str(key).replace('i', '')}д ({get_days[int(str(key).replace('i', ''))]}) {emoji}" if 'i' in str(
+                key) else f"{key}д ({get_days[key]}) {emoji}"
+            test = {get_days[int(str(key).replace('i', ''))]} if 'i' in str(key) else get_days[key]
             item = types.InlineKeyboardButton(button_text,
-                                              callback_data=f"{key}{self.smens}_{value}")
+                                              callback_data=f"{key}_{test}_{self.smens}_{value}")
             buttons.append(item)
 
         self.markup.add(*buttons)
@@ -526,7 +572,35 @@ class Main:
         bot.edit_message_text(
             f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
             f"вернуться на шаг назад, используй команду /back. В начало /start \n\nРаздел '{smen}':\n❌ - выходной\n✅ "
-            f"- смена\n🟠 - подработка",
+            f"- смена\n🟠 - подработка\n🟦 - смена (инвентаризация)",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+            reply_markup=self.markup
+        )
+
+    def invent(self):
+        self.markup = types.InlineKeyboardMarkup()
+
+        # Проверяем, выбран ли номер, и устанавливаем соответствующий текст кнопки
+        if 'i' in str(self.select_invent):
+            button_text = "✅"  # Зеленая галочка для выбранного номера
+            callback_data = "invent_not_selected"  # Изменяем состояние
+        else:
+            button_text = "❌"  # Красный крестик для невыбранного номера
+            callback_data = "invent_selected"  # Изменяем состояние
+
+        item = types.InlineKeyboardButton(button_text, callback_data=callback_data)
+        self.markup.add(item)
+
+        # Добавляем кнопки "Отмена" и "Сохранить"
+        cancel_button = types.InlineKeyboardButton("Отмена", callback_data='cancel_invent')
+        save_button = types.InlineKeyboardButton("💾 Сохранить!", callback_data='save_invent')
+        self.markup.add(cancel_button, save_button)
+
+        # Обновляем клавиатуру в том же сообщении
+        bot.edit_message_text(
+            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nБудет ли инвентаризация?",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup

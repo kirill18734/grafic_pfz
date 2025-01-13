@@ -59,9 +59,9 @@ def get_font_style(color):
         fill_style.end_color = 'FF0000'
     elif color == 'blue':
         value = 1
-        font_style.color = 'FF5B9BD5'
-        fill_style.start_color = 'FF5B9BD5'
-        fill_style.end_color = 'FF5B9BD5'
+        font_style.color = 'FF00B0F0'
+        fill_style.start_color = 'FF00B0F0'
+        fill_style.end_color = 'FF00B0F0'
     elif color == 'orange':
         font_style.color = 'FF000000'
         fill_style.start_color = 'FFC000'
