@@ -625,7 +625,7 @@ class Main:
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
             f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nБудет ли инвентаризация?",
+            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nБудет ли инвентаризация?\n✅ - Да\n❌ - Нет",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
