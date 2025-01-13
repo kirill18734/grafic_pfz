@@ -134,3 +134,6 @@ class DataCharts:
             for cell in row:
                 result.append(cell.value)
         return result
+
+# test = DataCharts()
+# print(test.get_users())

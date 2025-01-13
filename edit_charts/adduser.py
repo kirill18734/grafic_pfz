@@ -43,6 +43,7 @@ class AddUser:
 
     def merge(self, last_index):
         # проставляем имя (основная)
+        print(self.table.get_users())
         self.file.cell(row=len(self.table.get_users()) + 4, column=2, value=self.name)
         # проставляем имя (дополнительная)
         self.file.cell(row=last_index, column=13, value=self.name)
@@ -138,9 +139,10 @@ class AddUser:
             self.file = self.table.file[month]
             # определяем крайнию строчку , где последний пользователь
             self.last_user_undex = [cell.row for row in
-                         self.file.iter_rows(max_col=13, min_col=13, min_row=len(self.table.get_users()) + 10) for cell
-                         in
-                         row if cell.value is not None and cell.value != '' and cell.value != ' ']
+                                    self.file.iter_rows(max_col=13, min_col=13,
+                                                        min_row=len(self.table.get_users()) + 10) for cell
+                                    in
+                                    row if cell.value is not None and cell.value != '' and cell.value != ' ']
 
             self.unmerge(len(self.table.get_users()) + 4)
             # вставляем новую строчку в основной стобцец
@@ -149,13 +151,15 @@ class AddUser:
             self.file.insert_rows(self.last_user_undex[-1] + 2)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (основной)
             self.copy_row(len(self.table.get_users()) + 4)
-            # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
+            # # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
             self.copy_row(self.last_user_undex[-1] + 1)
-            # обратно все склеиваем
+            # # обратно все склеиваем
             self.merge(self.last_user_undex[-1] + 2)
-            # вызываем функцию для обновления формул автоподсчета
-            self.edit_summ()
+            # # вызываем функцию для обновления формул автоподсчета
+            # self.edit_summ()
             self.table.file.save(path_to_test1_json)
             self.table.file.close()
-# test = Add_user()
-# test.add('test')
+
+
+test = AddUser()
+test.add('Родитель', ['Январь'])

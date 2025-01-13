@@ -76,7 +76,7 @@ class Main:
         self.month = None
         self.select_smens = None
         self.key = None
-        self.state_stack = []  # Стек для хранения состояний
+        self.state_stack = {}  # Стек для хранения состояний
         self.selected_employees = getattr(self, 'selected_employees', set())
         self.user_id = None
         self.data_smens = None
@@ -97,7 +97,7 @@ class Main:
         # если нет, то 2 для нового графика и для старого
         if self.table_data.list_months[
             self.table_data.data_months()[2]] in str(
-                self.table_data.last_list.title):
+            self.table_data.last_list.title):
             self.actualy_months = [
                 self.table_data.list_months[self.table_data.data_months()[2]]]
             return [
@@ -123,9 +123,10 @@ class Main:
             user_ids.add(self.user_id)
             save_user_ids(user_ids)
             # Удаляем сообщения в диапазоне
-            for id_ in range(message.message_id - 10, message.message_id + 1):
+            for id_ in range(message.message_id - 20, message.message_id + 1):
                 try:
-                    bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                    bot.delete_message(chat_id=message.chat.id,
+                                       message_id=id_)
                 except:
                     continue
             # После завершения цикла и удаления сообщений вызываем метод выбора месяца
@@ -133,24 +134,30 @@ class Main:
 
         @bot.message_handler(commands=['back'])
         def handle_back(message):
-            last_state = None
-            try:
-                last_state = self.state_stack.pop()
-            except:
-                pass
             bot.delete_message(chat_id=message.chat.id,
                                message_id=message.message_id)
-            if self.month in last_state:
-                for id_ in range(message.message_id - 10,
+
+            last_key, last_function = self.state_stack.popitem()
+            if message == 'get_image':
+                handle_start_main(message)
+            if 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(last_key):
+                for id_ in range(message.message_id - 20,
                                  message.message_id + 1):
                     try:
                         bot.delete_message(chat_id=message.chat.id,
                                            message_id=id_)
                     except:
                         continue
-                self.handle_back_state(last_state)
-            elif last_state == 'get_image':
-                handle_start_main(message)
+                last_function()
+            else:
+                # for id_ in range(message.message_id - 20,
+                #                  message.message_id + 1):
+                #     try:
+                #         bot.delete_message(chat_id=message.chat.id,
+                #                            message_id=id_)
+                #     except:
+                #         continue
+                last_function()
 
         @bot.callback_query_handler(
             func=lambda call: call.data == 'start_command')
@@ -163,7 +170,7 @@ class Main:
 
             self.call = call
             if 'Текущий месяц' in self.call.data or 'Следующий месяц' in self.call.data:
-                self.state_stack.append(self.call.data)
+                self.state_stack[self.call.data] = self.show_month_selection
                 # Сохраняем выбранный месяц
                 self.selected_month = self.call.data
                 self.month = str(self.selected_month).replace(
@@ -173,43 +180,46 @@ class Main:
                     'Следующий месяц (', '').replace(')', '')
                 # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
                 self.show_sments_dop_sments()
-            elif self.call.data == 'shifts_jobs':
-                self.state_stack.append(self.call.data)
-                # Создаем новую клавиатуру
-                self.show_shifts_jobs_selection()
+            elif self.call.data in ['shifts_jobs', 'employees', 'get_image']:
+                self.state_stack[self.call.data] = self.show_sments_dop_sments
 
+                if self.call.data == 'shifts_jobs':
+                    # Создаем новую клавиатуру
+                    self.show_shifts_jobs_selection()
+
+                elif self.call.data == 'employees':
+                    self.add_del_employees()
+                elif self.call.data == 'get_image':
+                    image = Image()
+                    # Создаем новую клавиатуру с кнопками
+                    self.temp()
+                    image.get_image(self.month)
+                    self.image()
             elif self.call.data in ['smens', 'dopsmens']:
+                self.state_stack[self.call.data] = self.show_shifts_jobs_selection
                 self.smens = self.call.data
-                self.state_stack.append(self.call.data)
-
                 self.smens_users()
-            elif self.call.data == 'get_image':
-                self.state_stack.append(self.call.data)
-                image = Image()
-                # Создаем новую клавиатуру с кнопками
-                self.temp()
-                image.get_image(self.month)
-                self.image()
-
-            elif self.call.data in ['employees', 'cancel_delete']:
-                self.state_stack.append(self.call.data)
-                # Обработка кнопки "Сотрудники"
-                self.add_del_employees()
-            elif self.call.data == 'add_employees':
-                self.state_stack.append(self.call.data)
+            elif self.call.data in ['add_employees']:
+                self.state_stack[self.call.data] = self.add_del_employees
                 self.add_employees()
-            elif self.call.data == 'dell_employee':
-                self.state_stack.append(self.call.data)
+
+            elif self.call.data in ['dell_employee']:
+                self.state_stack[self.call.data] = self.add_del_employees
                 self.dell_employee()
 
             elif self.call.data.startswith('select_employee_'):
-                self.state_stack.append(self.call.data)
                 employee_name = self.call.data.split('_', 2)[2]
                 if employee_name in self.selected_employees:
                     self.selected_employees.remove(employee_name)
                 else:
                     self.selected_employees.add(employee_name)
                 self.dell_employee()
+
+            elif self.call.data in ['cancel_delete']:
+                self.add_del_employees()
+            #     self.state_stack[self.call.data] = self.dell_employee
+
+
             elif self.call.data.startswith('user_'):
                 self.table = Editsmens()
 
@@ -218,15 +228,16 @@ class Main:
                 self.status_dict = self.table.smens(self.month,
                                                     self.select_user)
                 self.actualy_smens()
-
             # если выбран сотрудник на удаление, то вызываем функию для
             # удаления
             elif self.call.data == 'confirm_delete':
-                self.state_stack.append(self.call.data)
                 if self.selected_employees:
                     self.delete_user = DeleteUsers()
+                    print(self.actualy_months, type(self.actualy_months))
                     self.delete_user.delete(list(self.selected_employees),
                                             self.actualy_months)
+
+
                     response_text = "Сотрудник(и) удален(ы)"
                     bot.answer_callback_query(call.id, response_text,
                                               show_alert=True)
@@ -238,28 +249,28 @@ class Main:
 
                 # Обработка статусов
             elif (self.smens + '_') in self.call.data:
-
                 key, day, smens, current_value = self.call.data.split('_')
                 self.key = key
                 if self.smens == 'smens':
                     if current_value == 'None' and 'i' not in str(
                             key) and 'сб' not in str(day) and 'вс' not in str(
-                            day):
+                        day):
                         self.status_dict[int(self.key)] = 1
                         self.actualy_smens()
                     elif current_value == '1' and 'i' not in str(
                             key) and 'сб' not in str(day) and 'вс' not in str(
-                            day):
+                        day):
                         self.status_dict[int(self.key)] = None
                         self.actualy_smens()
                     elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(
                             key)) and current_value == '1':
                         self.select_invent = key
-                        self.select_n = None
+                        self.select_n = 1
 
                         self.invent()
                     elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(
                             key)) and current_value == 'None':
+                        self.status_dict[int(self.key)] = 1
                         self.select_invent = key
                         self.select_n = 1
                         self.invent()
@@ -279,7 +290,7 @@ class Main:
                             self.key)
                         self.selected_number = self.status_dict[self.key]
                         self.dop_smens()
-            if call.data == "invent_selected":
+            elif call.data == "invent_selected":
                 self.select_new_invent = f'{self.select_invent}i'
                 self.select_invent = self.select_new_invent
                 self.invent()
@@ -315,6 +326,15 @@ class Main:
 
                 self.actualy_smens()
             elif call.data == 'cancel_invent':
+                if 'i' not in str(self.key):
+                    self.key = int(self.key)
+
+                # print(int(self.key))
+                self.status_dict = {
+                    key if key != self.key else int(str(self.key).replace('i', '')): value
+                    for key, value in
+                    self.status_dict.items()}
+                self.status_dict[int(str(self.key).replace('i', ''))] = None
                 self.actualy_smens()
             elif call.data == 'cancel':
                 # Логика для отмены
@@ -337,18 +357,6 @@ class Main:
                 self.smens_users()
             elif self.call.data in ['cancel_all_smens']:
                 self.smens_users()
-
-    # обработчик для команды /back
-    def handle_back_state(self, last_state):
-        if last_state in ['shifts_jobs', 'employees', 'add_employees']:
-
-            self.show_sments_dop_sments()
-        elif last_state in ['smens', 'dopsmens']:
-            self.show_shifts_jobs_selection()
-        elif last_state in ['dell_employee']:
-            self.add_del_employees()
-        else:
-            self.show_month_selection()
 
     def temp(self):
 
@@ -379,29 +387,17 @@ class Main:
 
         self.markup = InlineKeyboardMarkup([buttons])
 
-        # Проверяем, есть ли уже сообщение для редактирования
-        if hasattr(self, 'message_id') and self.message_id is not None:
-            try:
-                bot.edit_message_text(
-                    f"Выберите месяц:",
-                    chat_id=self.call.message.chat.id,
-                    message_id=self.message_id,
-                    reply_markup=self.markup
-                )
-            except Exception as e:
-                print(f"Ошибка при редактировании сообщения: {e}")
-                # Если редактирование не удалось, отправляем новое сообщение
-                self.send_new_month_selection_message()
-        else:
-            # Если нет message_id, отправляем новое сообщение
-            self.send_new_month_selection_message()
+        try:
+            bot.edit_message_text(
+                f"Выберите месяц:",
+                chat_id=self.call.message.chat.id,
+                message_id=self.call.message_id,
+                reply_markup=self.markup
+            )
 
-    def send_new_month_selection_message(self):
-        # Отправляем новое сообщение с кнопками
-        message = bot.send_message(self.user_id, "Выберите месяц:",
-                                   reply_markup=self.markup)
-        # Сохраняем message_id для дальнейшего редактирования
-        self.message_id = message.message_id
+        except:
+            bot.send_message(self.user_id, "Выберите месяц:",
+                             reply_markup=self.markup)
 
     def show_sments_dop_sments(self):
         self.markup = InlineKeyboardMarkup()
@@ -452,13 +448,19 @@ class Main:
         item5 = InlineKeyboardButton("Убрать сотрудника",
                                      callback_data='dell_employee')
         self.markup.add(item4, item5)
+        try:
+            bot.edit_message_text(
+                f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+                f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
+                chat_id=self.call.message.chat.id,
+                message_id=self.call.message.message_id,
+                reply_markup=self.markup)
+        except:
 
-        bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
-            chat_id=self.call.message.chat.id,
-            message_id=self.call.message.message_id,
-            reply_markup=self.markup)
+            bot.send_message(self.user_id,
+                             f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
+                             f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
+                             reply_markup=self.markup)
 
     def add_employees(self):
         # Редактируем текущее сообщение, чтобы запросить имя сотрудника
@@ -489,17 +491,28 @@ class Main:
                                       show_alert=True)
 
             self.add_del_employees()
-        elif message.text in ['/back']:
-            bot.delete_message(chat_id=message.chat.id,
-                               message_id=message.message_id)
-            self.add_del_employees()
+        # elif message.text in ['/back']:
+        #     bot.delete_message(chat_id=message.chat.id,
+        #                        message_id=message.message_id)
+        #     # self.add_del_employees()
         else:
-            bot.delete_message(chat_id=message.chat.id,
-                               message_id=message.message_id)
-            response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
-            bot.answer_callback_query(self.call.id, response_text,
-                                      show_alert=True)
-            self.add_del_employees()
+            for id_ in range(message.message_id - 1, message.message_id + 1):
+                try:
+                    bot.delete_message(chat_id=message.chat.id,
+                                       message_id=message.message_id)
+                except:
+                    continue
+            # bot.delete_message(chat_id=message.chat.id,
+            #                    message_id=message.message_id)
+            if message.text in users.get_users():
+                self.state_stack.popitem()
+                response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
+                bot.answer_callback_query(self.call.id, response_text,
+                                          show_alert=True)
+
+            if message.text == '/back':
+                self.state_stack.popitem()
+                self.add_del_employees()
 
     def dell_employee(self):
         self.table_data = DataCharts()
@@ -616,7 +629,7 @@ class Main:
         self.markup.add(item)
 
         # Добавляем кнопки "Отмена" и "Сохранить"
-        cancel_button = types.InlineKeyboardButton("Отмена",
+        cancel_button = types.InlineKeyboardButton("Убрать смену",
                                                    callback_data='cancel_invent')
         save_button = types.InlineKeyboardButton("💾 Сохранить!",
                                                  callback_data='save_invent')

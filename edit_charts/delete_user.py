@@ -1,3 +1,5 @@
+from time import sleep
+
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts
 import re
@@ -71,5 +73,6 @@ class DeleteUsers:
                 if row_del_users:
                     # вызываем функцию для удаления , где указываем
                     self.unmerge(len(self.table.get_users()) + 5, row_del_users)
-        self.table.file.save(path_to_test1_json)
-        self.table.file.close()
+                    self.table.file.save(path_to_test1_json)
+                    self.table.file.close()
+                    sleep(5)
