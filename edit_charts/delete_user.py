@@ -1,3 +1,4 @@
+from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts
 import re
 
@@ -9,18 +10,19 @@ class DeleteUsers:
 
     # изменяем координаты для суммирования строк
     def edit_summ(self):
-        # первый сотрудник начинается с 5 строчки
         count = 5
         rows_to_update = []
+
         # Проходим по каждой строке в файле
         for row in self.file.iter_rows():
             # Извлекаем значения ячеек в строке и сохраняем их в список
             row_values = [cell.value for cell in row]
 
             # Проверяем, содержится ли хотя бы один пользователь и формула '=SUMIF' в значениях строки
-            if any(user in str(row_values) for user in self.table.get_users()) and '=SUMIF' in str(row_values):
+            if (user for user in self.table.get_users() if user in str(row_values)) and '=SUMIF' in str(row_values):
                 # Если условие выполнено, выполняем нужные действия (например, печатаем что-то)
                 rows_to_update.append(row)
+
             # Заменяем значения в определенных ячейках
         for row in rows_to_update:
             for cell in row:
@@ -30,7 +32,6 @@ class DeleteUsers:
                         lambda m: f"{m.group(1)}{count}:{m.group(3)}{count}",
                         cell.value
                     )
-
             count += 1
 
     def unmerge(self, start_row, rows=None):
@@ -56,7 +57,8 @@ class DeleteUsers:
             self.file.merge_cells(start_row=min_row - 1, start_column=min_col, end_row=max_row - 1,
                                   end_column=max_col)
         self.edit_summ()
-        self.table.file.save('test1.xlsx')
+        self.table.file.save(path_to_test1_json)
+        self.table.file.close()
 
     def delete(self, users, months):
         for month in months:
@@ -69,4 +71,5 @@ class DeleteUsers:
                 if row_del_users:
                     # вызываем функцию для удаления , где указываем
                     self.unmerge(len(self.table.get_users()) + 5, row_del_users)
-        self.table.file.save('test1.xlsx')
+        self.table.file.save(path_to_test1_json)
+        self.table.file.close()

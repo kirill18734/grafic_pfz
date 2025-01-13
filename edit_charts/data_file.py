@@ -4,6 +4,8 @@ from datetime import datetime
 import calendar
 from config.auto_search_dir import path_to_test1_json
 
+
+
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
     value = None
@@ -49,7 +51,7 @@ def get_font_style(color):
         hidden=False
     )
     if color == 'green':
-        pass
+        return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
     elif color == 'red':
         value = 1
         font_style.color = 'FF0000'
@@ -57,14 +59,16 @@ def get_font_style(color):
         fill_style.end_color = 'FF0000'
     elif color == 'blue':
         value = 1
-        font_style.color = 'FF5B9BD5'
-        fill_style.start_color = 'FF5B9BD5'
-        fill_style.end_color = 'FF5B9BD5'
+        font_style.color = 'FF00B0F0'
+        fill_style.start_color = 'FF00B0F0'
+        fill_style.end_color = 'FF00B0F0'
     elif color == 'orange':
-        font_style.color = 'FFC000'
-        fill_style.start_color = 'FF92D050'
-        fill_style.end_color = 'FF92D050'
-    return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style,value]
+        font_style.color = 'FF000000'
+        fill_style.start_color = 'FFC000'
+        fill_style.end_color = 'FFC000'
+        alignment_style.horizontal = 'right'  # Устанавливаем выравнивание по правому краю
+        alignment_style.vertical = 'center'  # Устанавливаем вертикальное выравнивание по центру (или 'top', 'bottom' по вашему выбору)
+    return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
 
 
 class DataCharts:
@@ -120,7 +124,7 @@ class DataCharts:
         new_index = month % len(self.list_months)
         # количество дней в следующем месяце, разницу в днях,  индекс текущего месяца, индекс следующего месяца
         difference = [current_month_days,
-                      (next_month_days - current_month_days) + 5, month - 1, new_index, first_weekday_next_month]
+                      (next_month_days - current_month_days) + 3, month -1 , new_index, first_weekday_next_month]
         return difference
 
     # функция для получения нужные данных
