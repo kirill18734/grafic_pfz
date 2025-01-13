@@ -32,11 +32,14 @@ path_to_python_exe = find_file_in_project('python.exe',
 path_to_config_json = find_file_in_project('config.json',
                                            path_to_project_folder)
 # # Ищем файл config.json и получаем его путь
-# path_to_test1_json = find_file_in_project('test1.xlsx',
-#                                           path_to_project_folder)
+path_to_test1_json = find_file_in_project('График_работы2.xlsx',
+                                          path_to_project_folder)
+path_to_img = find_file_in_project('months.png',
+                                   path_to_project_folder)
+
 # path_to_test1_json =  r"C:\Users\kiraf\OneDrive\Документы\График_работы2.xlsx"
 
-path_to_test1_json = r"G:\Мой диск\График_работы2.xlsx"
+
 # Преобразуем содержимое файла
 with open(path_to_config_json, 'r', encoding='utf-8') as file:
     data_config = json.load(file)
