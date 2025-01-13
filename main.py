@@ -263,7 +263,7 @@ class Main:
             self.show_shifts_jobs_selection()
 
         elif last_state in ['add_employees', 'dell_employee']:
-            self.А()
+            self.add_del_employees()
         elif last_state == self.month:
             self.show_month_selection()
 
