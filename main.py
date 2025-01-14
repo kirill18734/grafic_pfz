@@ -60,11 +60,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def job():
-    if datetime.datetime.now().day == 15:
+    if datetime.datetime.now().day == 20:
         create_new_chart()
 
 
-schedule.every().day.at("01:39").do(job)
+schedule.every().day.at("12:00").do(job)
 
 
 class Main:
