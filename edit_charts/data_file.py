@@ -5,7 +5,6 @@ import calendar
 from config.auto_search_dir import path_to_test1_json
 
 
-
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
     value = None
@@ -67,7 +66,8 @@ def get_font_style(color):
         fill_style.start_color = 'FFC000'
         fill_style.end_color = 'FFC000'
         alignment_style.horizontal = 'right'  # Устанавливаем выравнивание по правому краю
-        alignment_style.vertical = 'center'  # Устанавливаем вертикальное выравнивание по центру (или 'top', 'bottom' по вашему выбору)
+        alignment_style.vertical = 'center'  # Устанавливаем вертикальное выравнивание по центру (или 'top', 'bottom'
+        # по вашему выбору)
     return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
 
 
@@ -77,12 +77,10 @@ class DataCharts:
                             'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь',
                             'Декабрь']
         self.file = load_workbook(path_to_test1_json)  # загружаем файл
-        # крайний месяц
-        self.last_list = self.file.worksheets[-1]
 
     # получение активных сотрудников , за последний месяц
-    def get_users(self):
-        get_users = self.ineration_all_last_table(max_col=2, min_col=2, min_row=5)
+    def get_users(self, month):
+        get_users = self.ineration_all_last_table(month, max_col=2, min_col=2, min_row=5)
         users = []
         for user in get_users:
             if user is not None:
@@ -124,16 +122,13 @@ class DataCharts:
         new_index = month % len(self.list_months)
         # количество дней в следующем месяце, разницу в днях,  индекс текущего месяца, индекс следующего месяца
         difference = [current_month_days,
-                      (next_month_days - current_month_days) + 3, month -1 , new_index, first_weekday_next_month]
+                      (next_month_days - current_month_days) + 3, month - 1, new_index, first_weekday_next_month]
         return difference
 
     # функция для получения нужные данных
-    def ineration_all_last_table(self, min_row=None, min_col=None, max_col=None, max_row=None):
+    def ineration_all_last_table(self, month, min_row=None, min_col=None, max_col=None, max_row=None):
         result = []
-        for row in self.last_list.iter_rows(min_row=min_row, min_col=min_col, max_row=max_row, max_col=max_col):
+        for row in self.file[month].iter_rows(min_row=min_row, min_col=min_col, max_row=max_row, max_col=max_col):
             for cell in row:
                 result.append(cell.value)
         return result
-
-# test = DataCharts()
-# print(test.get_users())

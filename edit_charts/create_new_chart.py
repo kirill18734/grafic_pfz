@@ -18,12 +18,14 @@ class CreateChart:
         self.start_col = None
         self.file = None
         self.table_data = DataCharts()
+        self.last_list = self.table_data.file.worksheets[-1]
         self.weekdays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
         self.list_days_2 = {28: "AE", 29: "AF", 30: "AG", 31: "AH",
                             32: "AI", 33: "AJ", 34: "AK"}
 
     def add_colls(self, cell, i, new_value):
-        # присваиваем скопированному последнему столбцу переменную, где будет все храниться
+        # присваиваем скопированному последнему столбцу переменную,
+        # где будет все храниться
         new_cell = self.file.cell(row=cell.row,
                                   column=cell.column + i,
                                   value=new_value)
@@ -66,19 +68,23 @@ class CreateChart:
 
     def edit_summ(self, count_add):
         # также изменяем ячейки для суммирования резульата
-        for row in self.file.iter_rows(min_row=len(self.table_data.get_users()) + 10,
-                                       min_col=18):
+        for row in self.file.iter_rows(
+                min_row=len(
+                    self.table_data.get_users(self.last_list.title)) + 10,
+                min_col=18):
             for cell in row:
                 if self.list_days_2[self.table_data.data_months()[0]] in str(
                         cell.value):  # Получаем значения в текущей строке
                     text = str(cell.value).replace(
                         self.list_days_2[self.table_data.data_months()[0]],
-                        self.list_days_2[self.table_data.data_months()[0] + count_add])
+                        self.list_days_2[
+                            self.table_data.data_months()[0] + count_add])
                     cell.value = text
 
     def clear_table(self):
         # очищаем таблицу
-        for row in range(5, len(self.table_data.get_users()) + 5):
+        for row in range(5, len(self.table_data.get_users(
+                self.last_list.title)) + 5):
             for col in range(4, self.file.max_column + 1):
                 cell = self.file.cell(row=row, column=col)
                 cell.value = None  # Устанавливаем значение на None
@@ -93,8 +99,10 @@ class CreateChart:
     # простовляем актуальные дни недели для нового месяца
     def days_week(self, count_add):
         for col in range(4, self.file.max_column):
-            start_index = self.table_data.data_months()[4]  # индекс первого для неделя для нового месяца
-            for i in range(self.table_data.data_months()[0] + count_add):  # проходил полные дни для нового месяца
+            start_index = self.table_data.data_months()[
+                4]  # индекс первого для неделя для нового месяца
+            for i in range(self.table_data.data_months()[
+                               0] + count_add):  # проходил полные дни для нового месяца
                 # Вычисляем текущий индекс с помощью остатка от деления
                 current_index = (start_index + i) % len(
                     self.weekdays)  # определяем новый день день недели для каждой итерации
@@ -132,7 +140,7 @@ class CreateChart:
 
     # новый график
     def new_chart(self):
-        if self.table_data.last_list.title == self.table_data.list_months[self.table_data.data_months()[3]]:
+        if self.last_list.title == self.table_data.list_months[self.table_data.data_months()[3]]:
             return 'Добавление не требуется, данный месяц уже есть'
         # Перед созданием нового листа, сначала удаляем старый с таким же названием
         for sheet in self.table_data.file.worksheets:
@@ -143,19 +151,26 @@ class CreateChart:
             path_to_test1_json)
 
         # Создаем копию крайнего месяца
-        self.file = self.table_data.file.copy_worksheet(self.table_data.last_list)
+        self.file = self.table_data.file.copy_worksheet(
+            self.last_list)
         # изменяем название страницы (следующий месяц)
         self.file.title = f'{self.table_data.list_months[self.table_data.data_months()[3]]}'
         # изменяем  заголовки на новый месяц
         for row in self.file.iter_rows():
             for cell in row:
                 if self.table_data.list_months[self.table_data.data_months()[2]] in str(cell.value):
-                    cell.value = str(cell.value).replace(self.table_data.list_months[self.table_data.data_months()[2]],
-                                                         self.table_data.list_months[self.table_data.data_months()[3]])
-        last_coll = len(self.table_data.ineration_all_last_table(min_row=2, max_row=2))
+                    cell.value = str(cell.value).replace(
+                        self.table_data.list_months[
+                            self.table_data.data_months()[2]],
+                        self.table_data.list_months[
+                            self.table_data.data_months()[3]])
+        last_coll = len(
+            self.table_data.ineration_all_last_table(self.last_list.title,
+                                                     min_row=2, max_row=2))
         # перед добавление или удалением новых ячеек , сначала нужно разъеденить все ячейки, которые взаимодиествуют
         # при добавлении новых
-        self.file.unmerge_cells(start_row=2, start_column=2, end_row=2, end_column=int(self.file.max_column))
+        self.file.unmerge_cells(start_row=2, start_column=2, end_row=2,
+                                end_column=int(self.file.max_column))
         # дальше определяем что нужно сделать с ячейки, добавить или удалить по нашему выводу:
         # если будет вычитание , то преобразовываем в положительно число
         count_edit_coll = abs(self.table_data.data_months()[1])
@@ -170,12 +185,12 @@ class CreateChart:
             self.days_week(self.table_data.data_months()[1])
 
         # после всех обработок объединяем обратно
-        self.file.merge_cells(start_row=2, start_column=2, end_row=2 ,end_column=int(self.file.max_column))
+        self.file.merge_cells(start_row=2, start_column=2, end_row=2,
+                              end_column=int(self.file.max_column))
 
         self.table_data.file.save(
             path_to_test1_json)
-        table = DataCharts()
-        if self.table_data.list_months[self.table_data.data_months()[3]] in table.last_list.title:
-            return True
-        else:
-            return False
+
+#
+# test = CreateChart()
+# test.new_chart()

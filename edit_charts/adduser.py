@@ -1,20 +1,16 @@
 import re
-from time import sleep
-
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
-from edit_charts.delete_user import DeleteUsers
 from copy import copy
 
 
 class AddUser:
     def __init__(self):
+        self.month = None
         self.file = None
         self.merged_ranges = None
-        self.last_user_undex = None
         self.name = None
         self.table = DataCharts()
-        self.del_tabe = DeleteUsers()
 
     def edit_summ(self):
         count = 5
@@ -26,14 +22,16 @@ class AddUser:
             row_values = [cell.value for cell in row]
 
             # Проверяем, содержится ли хотя бы один пользователь и формула '=SUMIF' в значениях строки
-            if (user for user in self.table.get_users() if user in str(row_values)) and '=SUMIF' in str(row_values):
+            if (user for user in self.table.get_users(self.month) if user in str(row_values)) and '=SUMIF' in str(
+                    row_values):
                 # Если условие выполнено, выполняем нужные действия (например, печатаем что-то)
                 rows_to_update.append(row)
 
             # Заменяем значения в определенных ячейках
         for row in rows_to_update:
             for cell in row:
-                if isinstance(cell.value, str):  # Проверяем, является ли значение строкой
+                if isinstance(cell.value,
+                              str):  # Проверяем, является ли значение строкой
                     cell.value = re.sub(
                         r'([A-Z]+)(\d+):([A-Z]+)(\d+)',
                         lambda m: f"{m.group(1)}{count}:{m.group(3)}{count}",
@@ -42,30 +40,36 @@ class AddUser:
             count += 1
 
     def merge(self, last_index):
-        # проставляем имя (основная)
-        print(self.table.get_users())
-        self.file.cell(row=len(self.table.get_users()) + 4, column=2, value=self.name)
         # проставляем имя (дополнительная)
         self.file.cell(row=last_index, column=13, value=self.name)
+        # проставляем имя (основная)
+        self.file.cell(row=len(self.table.get_users(self.month)) + 4, column=2,
+                       value=self.name)
+
         # Обработка объединенных диапазонов
         for merged in self.merged_ranges:
             # Получаем границы диапазона
             min_col, min_row, max_col, max_row = merged.bounds
 
             # Уменьшаем min_row и max_row на 1, чтобы учесть сдвиг
-            self.file.merge_cells(start_row=min_row + 1, start_column=min_col, end_row=max_row + 1,
+            self.file.merge_cells(start_row=min_row + 1, start_column=min_col,
+                                  end_row=max_row + 1,
                                   end_column=max_col)
         # также отдельно объединяем новые ячейки (основная таблица)
-        row_merge = len(self.table.get_users()) + 3
-        self.file.merge_cells(start_row=row_merge, start_column=2, end_row=row_merge,
+        row_merge = len(self.table.get_users(self.month)) + 3
+        self.file.merge_cells(start_row=row_merge, start_column=2,
+                              end_row=row_merge,
                               end_column=3)
         # также отдельно объединяем новые ячейки (дополнительная таблица)
         row_merge = last_index
-        self.file.merge_cells(start_row=row_merge, start_column=13, end_row=row_merge,
+        self.file.merge_cells(start_row=row_merge, start_column=13,
+                              end_row=row_merge,
                               end_column=14)
-        self.file.merge_cells(start_row=row_merge, start_column=15, end_row=row_merge,
+        self.file.merge_cells(start_row=row_merge, start_column=15,
+                              end_row=row_merge,
                               end_column=17)
-        self.file.merge_cells(start_row=row_merge, start_column=18, end_row=row_merge,
+        self.file.merge_cells(start_row=row_merge, start_column=18,
+                              end_row=row_merge,
                               end_column=20)
 
     def unmerge(self, start_row):
@@ -77,12 +81,14 @@ class AddUser:
             min_col, min_row, max_col, max_row = merged.bounds
             # Если объединенные ячейки начинаются на строке больше или равной start_row, разъединяем их
             if min_row >= start_row:
-                self.merged_ranges.append(merged)  # Сохраняем диапазон для последующего объединения
+                self.merged_ranges.append(
+                    merged)  # Сохраняем диапазон для последующего объединения
                 self.file.unmerge_cells(str(merged))
 
     def add_colls(self, cell, i, new_value):
         # стилизация для основной таблицы
-        if cell.row <= len(self.table.get_users()) + 5 and cell.column > 3:
+        if cell.row <= len(
+                self.table.get_users(self.month)) + 5 and cell.column > 3:
 
             # присваиваем скопированному последнему столбцу переменную, где будет все храниться
             new_cell = self.file.cell(row=cell.row + i,
@@ -102,7 +108,7 @@ class AddUser:
             new_cell = self.file.cell(row=cell.row + i,
                                       column=cell.column,
                                       value=new_value)
-            # если у этой ячейки есть стили , то также копируем их
+            # если у этой ячейки есть стили, то также копируем их
             if cell.has_style:
                 new_cell.font = copy(cell.font)
                 new_cell.border = copy(cell.border)
@@ -134,32 +140,36 @@ class AddUser:
                     self.add_colls(cell, i, new_value)
 
     def add(self, name, months):
-        self.name = name
         for month in months:
+            self.month = month
+            self.name = name
             self.file = self.table.file[month]
-            # определяем крайнию строчку , где последний пользователь
-            self.last_user_undex = [cell.row for row in
-                                    self.file.iter_rows(max_col=13, min_col=13,
-                                                        min_row=len(self.table.get_users()) + 10) for cell
-                                    in
-                                    row if cell.value is not None and cell.value != '' and cell.value != ' ']
+            # определяем крайнию строчку, где последний пользователь
+            last_user_undex = [cell.row for row in
+                               self.file.iter_rows(max_col=13, min_col=13,
+                                                   min_row=len(
+                                                       self.table.get_users(
+                                                           self.month)) + 10)
+                               for cell
+                               in
+                               row if
+                               cell.value is not None and cell.value != '' and cell.value != ' '][
+                -1]
 
-            self.unmerge(len(self.table.get_users()) + 4)
+            self.unmerge(len(self.table.get_users(self.month)) + 4)
             # вставляем новую строчку в основной стобцец
-            self.file.insert_rows(len(self.table.get_users()) + 5)
+            self.file.insert_rows(len(self.table.get_users(self.month)) + 5)
             # вставляем новую строчку в дополнительный столбец
-            self.file.insert_rows(self.last_user_undex[-1] + 2)
+            self.file.insert_rows(last_user_undex + 2)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (основной)
-            self.copy_row(len(self.table.get_users()) + 4)
-            # # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
-            self.copy_row(self.last_user_undex[-1] + 1)
-            # # обратно все склеиваем
-            self.merge(self.last_user_undex[-1] + 2)
-            # # вызываем функцию для обновления формул автоподсчета
-            # self.edit_summ()
+            self.copy_row(len(self.table.get_users(self.month)) + 4)
+            # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
+            self.copy_row(last_user_undex + 1)
+            # обратно все склеиваем
+            self.merge(last_user_undex + 2)
+            # вызываем функцию для обновления формул автоподсчета
+            self.edit_summ()
             self.table.file.save(path_to_test1_json)
-            self.table.file.close()
 
-
-test = AddUser()
-test.add('Родитель', ['Январь'])
+# test = AddUser()
+# test.add('Домой', ['Январь', 'Февраль', 'Декабрь'])

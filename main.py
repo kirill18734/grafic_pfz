@@ -13,7 +13,7 @@ from edit_charts.delete_user import DeleteUsers
 from edit_charts.data_file import DataCharts
 from edit_charts.adduser import AddUser
 from edit_charts.edit_smens import Editsmens
-from edit_charts.get_img_xl import Image
+from edit_charts.get_img_xl import open_site
 import threading
 import time
 import schedule
@@ -32,18 +32,24 @@ def load_user_ids():
     return set()
 
 
-def save_user_ids(user_ids):
+def save_user_ids(userids):
     with open(USER_IDS_FILE, 'w') as file:
-        json.dump(list(user_ids), file)
+        json.dump(list(userids), file)
 
 
 def create_new_chart():
     new = CreateChart()
-    result = new.new_chart()
+    new.new_chart()
+    table_data = DataCharts()
+    if table_data.list_months[table_data.data_months()[3]] in str(table_data.file.worksheets[-1].title):
+        result = True
+    else:
+        result = False
+
     for user_id in load_user_ids():
         if result:
             bot.send_message(user_id,
-                             'Создан график на новый месяц, необходимо заполнить')
+                             f'Создан график на новый месяц ({str(table_data.file.worksheets[-1].title)}), необходимо заполнить. \n\nЧтобы увидеть новый месяц необходимо нажать на /start')
         else:
             bot.send_message(user_id,
                              'Была попытка создать новый график, что то пошло не так, необходимо проверить')
@@ -54,11 +60,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def job():
-    if datetime.datetime.now().day == 20:
+    if datetime.datetime.now().day == 15:
         create_new_chart()
 
 
-schedule.every().day.at("12:00").do(job)
+schedule.every().day.at("01:39").do(job)
 
 
 class Main:
@@ -88,16 +94,16 @@ class Main:
         self.input_enabled = False  # Флаг для контроля ввода
         self.delete_user = None
         self.table_data = None
+        self.last_list = None
         self.start_main()
 
     # начальные кнопки, если нет, нового месяца, но используем текущий, или если он есть, то выводим 2 кнопки
     def get_months(self):
         self.table_data = DataCharts()
+        self.last_list = self.table_data.file.worksheets[-1]
         # если крайний лист, будет совпадать с текущим месяцем, то значит будет одна кнопка для текущего месяца,
         # если нет, то 2 для нового графика и для старого
-        if self.table_data.list_months[
-            self.table_data.data_months()[2]] in str(
-            self.table_data.last_list.title):
+        if self.table_data.list_months[self.table_data.data_months()[2]] in str(self.last_list.title):
             self.actualy_months = [
                 self.table_data.list_months[self.table_data.data_months()[2]]]
             return [
@@ -140,7 +146,8 @@ class Main:
             last_key, last_function = self.state_stack.popitem()
             if message == 'get_image':
                 handle_start_main(message)
-            if 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(last_key):
+            if 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(
+                    last_key):
                 for id_ in range(message.message_id - 20,
                                  message.message_id + 1):
                     try:
@@ -167,215 +174,209 @@ class Main:
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
-
             self.call = call
             if 'Текущий месяц' in self.call.data or 'Следующий месяц' in self.call.data:
                 self.state_stack[self.call.data] = self.show_month_selection
-                # Сохраняем выбранный месяц
-                self.selected_month = self.call.data
-                self.month = str(self.selected_month).replace(
-                    'Текущий месяц (',
-                    '').replace(')',
-                                '').replace(
-                    'Следующий месяц (', '').replace(')', '')
-                # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
-                self.show_sments_dop_sments()
-            elif self.call.data in ['shifts_jobs', 'employees', 'get_image']:
-                self.state_stack[self.call.data] = self.show_sments_dop_sments
 
-                if self.call.data == 'shifts_jobs':
-                    # Создаем новую клавиатуру
-                    self.show_shifts_jobs_selection()
-
-                elif self.call.data == 'employees':
-                    self.add_del_employees()
-                elif self.call.data == 'get_image':
-                    image = Image()
-                    # Создаем новую клавиатуру с кнопками
-                    self.temp()
-                    image.get_image(self.month)
-                    self.image()
-            elif self.call.data in ['smens', 'dopsmens']:
-                self.state_stack[self.call.data] = self.show_shifts_jobs_selection
-                self.smens = self.call.data
-                self.smens_users()
-            elif self.call.data in ['add_employees']:
-                self.state_stack[self.call.data] = self.add_del_employees
-                self.add_employees()
-
-            elif self.call.data in ['dell_employee']:
-                self.state_stack[self.call.data] = self.add_del_employees
-                self.dell_employee()
-
-            elif self.call.data.startswith('select_employee_'):
-                employee_name = self.call.data.split('_', 2)[2]
-                if employee_name in self.selected_employees:
-                    self.selected_employees.remove(employee_name)
-                else:
-                    self.selected_employees.add(employee_name)
-                self.dell_employee()
-
-            elif self.call.data in ['cancel_delete']:
-                self.add_del_employees()
-            #     self.state_stack[self.call.data] = self.dell_employee
-
-
-            elif self.call.data.startswith('user_'):
-                self.table = Editsmens()
-
-                self.select_user = str(self.call.data).replace(
-                    'user_', '')
-                self.status_dict = self.table.smens(self.month,
-                                                    self.select_user)
-                self.actualy_smens()
-            # если выбран сотрудник на удаление, то вызываем функию для
-            # удаления
-            elif self.call.data == 'confirm_delete':
-                if self.selected_employees:
-                    self.delete_user = DeleteUsers()
-                    print(self.actualy_months, type(self.actualy_months))
-                    self.delete_user.delete(list(self.selected_employees),
-                                            self.actualy_months)
-
-
-                    response_text = "Сотрудник(и) удален(ы)"
-                    bot.answer_callback_query(call.id, response_text,
+            if not self.state_stack or (
+                    'Текущий месяц' not in str(list(self.state_stack.keys())[0]) and
+                    'Следующий месяц' not in str(list(self.state_stack.keys())[0])):
+                # Если кнопок нет, сбрасываем состояние и начинаем заново
+                handle_start_main(call.message)
+            else:
+                if 'Текущий месяц' in self.call.data or 'Следующий месяц' in self.call.data:
+                    self.state_stack[
+                        self.call.data] = self.show_month_selection
+                    # Сохраняем выбранный месяц
+                    self.selected_month = self.call.data
+                    self.month = str(self.selected_month).replace(
+                        'Текущий месяц (',
+                        '').replace(')',
+                                    '').replace(
+                        'Следующий месяц (', '').replace(')', '')
+                    # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
+                    self.show_sments_dop_sments()
+                elif self.call.data in ['image']:
+                    response_text = f"""Заявка на создание картинки 'График работы' создана. Пожалуйста ожидайте. В течении 30сек картинка отправиться."""
+                    bot.answer_callback_query(self.call.id, response_text,
                                               show_alert=True)
+                    open_site(self.month)
+                    # Отправляем изображение
+                    with open(path_to_img,
+                              'rb') as photo:
+                        bot.send_photo(self.call.message.chat.id, photo)
+                elif self.call.data in ['shifts_jobs', 'employees',
+                                        'get_image']:
+                    self.state_stack[
+                        self.call.data] = self.show_sments_dop_sments
+
+                    if self.call.data == 'shifts_jobs':
+                        # Создаем новую клавиатуру
+                        self.show_shifts_jobs_selection()
+
+                    elif self.call.data == 'employees':
+                        self.add_del_employees()
+                    elif self.call.data == 'get_image':
+                        self.data_image()
+
+                elif self.call.data in ['smens', 'dopsmens']:
+                    self.state_stack[
+                        self.call.data] = self.show_shifts_jobs_selection
+                    self.smens = self.call.data
+                    self.smens_users()
+                elif self.call.data in ['add_employees']:
+                    self.state_stack[self.call.data] = self.add_del_employees
+                    self.add_employees()
+
+                elif self.call.data in ['dell_employee']:
+                    self.state_stack[self.call.data] = self.add_del_employees
+                    self.dell_employee()
+
+                elif self.call.data.startswith('select_employee_'):
+                    employee_name = self.call.data.split('_', 2)[2]
+                    if employee_name in self.selected_employees:
+                        self.selected_employees.remove(employee_name)
+                    else:
+                        self.selected_employees.add(employee_name)
+                    self.dell_employee()
+
+                elif self.call.data in ['cancel_delete']:
                     self.add_del_employees()
-                else:
-                    response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
-                    bot.answer_callback_query(call.id, response_text,
-                                              show_alert=True)
+                #     self.state_stack[self.call.data] = self.dell_employee
 
-                # Обработка статусов
-            elif (self.smens + '_') in self.call.data:
-                key, day, smens, current_value = self.call.data.split('_')
-                self.key = key
-                if self.smens == 'smens':
-                    if current_value == 'None' and 'i' not in str(
-                            key) and 'сб' not in str(day) and 'вс' not in str(
-                        day):
-                        self.status_dict[int(self.key)] = 1
-                        self.actualy_smens()
-                    elif current_value == '1' and 'i' not in str(
-                            key) and 'сб' not in str(day) and 'вс' not in str(
-                        day):
-                        self.status_dict[int(self.key)] = None
-                        self.actualy_smens()
-                    elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(
-                            key)) and current_value == '1':
-                        self.select_invent = key
-                        self.select_n = 1
+                elif self.call.data.startswith('user_'):
+                    self.table = Editsmens()
+                    self.select_user = str(self.call.data).replace(
+                        'user_', '')
+                    self.status_dict = self.table.smens(self.month,
+                                                        self.select_user)
+                    self.actualy_smens()
+                # если выбран сотрудник на удаление, то вызываем функию для
+                # удаления
+                elif self.call.data == 'confirm_delete':
+                    if self.selected_employees:
 
-                        self.invent()
-                    elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(
-                            key)) and current_value == 'None':
-                        self.status_dict[int(self.key)] = 1
-                        self.select_invent = key
-                        self.select_n = 1
-                        self.invent()
+                        delete_user = DeleteUsers()
+                        delete_user.delete(list(self.selected_employees),
+                                           self.actualy_months)
+
+                        response_text = "Сотрудник(и) удален(ы)"
+                        bot.answer_callback_query(call.id, response_text,
+                                                  show_alert=True)
+                        self.add_del_employees()
                     else:
                         response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
                         bot.answer_callback_query(call.id, response_text,
                                                   show_alert=True)
 
-                elif self.smens == 'dopsmens':
+                    # Обработка статусов
+                elif (self.smens + '_') in self.call.data:
+                    key, day, smens, current_value = self.call.data.split('_')
+                    self.key = key
+                    if self.smens == 'smens':
+                        if current_value == 'None' and 'i' not in str(
+                                key) and 'сб' not in str(day) and 'вс' not in str(day):
+                            self.status_dict[int(self.key)] = 1
+                            self.actualy_smens()
+                        elif current_value == '1' and 'i' not in str(key) and 'сб' not in str(day) and 'вс' not in str(
+                                day):
+                            self.status_dict[int(self.key)] = None
+                            self.actualy_smens()
+                        elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(key)) and current_value == '1':
+                            self.select_invent = key
+                            self.select_n = 1
 
-                    if current_value == '1':
-                        response_text = "Чтобы изменить смену, перейдите пожалуйста в раздел 'Смены'."
-                        bot.answer_callback_query(call.id, response_text,
-                                                  show_alert=True)
-                    else:
-                        self.key = self.key if 'i' in self.key else int(
-                            self.key)
-                        self.selected_number = self.status_dict[self.key]
-                        self.dop_smens()
-            elif call.data == "invent_selected":
-                self.select_new_invent = f'{self.select_invent}i'
-                self.select_invent = self.select_new_invent
-                self.invent()
-            elif call.data == "invent_not_selected":
-                if type(self.select_invent) == str:
-                    self.select_new_invent = int(
-                        str(self.select_invent).replace('i',
-                                                        ''))  # Убираем элемент из выбранных
-                else:
+                            self.invent()
+                        elif ('сб' in str(day) or 'вс' in str(day) or 'i' in str(key)) and current_value == 'None':
+                            self.status_dict[int(self.key)] = 1
+                            self.select_invent = key
+                            self.select_n = 1
+                            self.invent()
+                        else:
+                            response_text = """Чтобы изменить подработку, перейдите пожалуйста в раздел "Подработки"."""
+                            bot.answer_callback_query(call.id, response_text,
+                                                      show_alert=True)
+
+                    elif self.smens == 'dopsmens':
+
+                        if current_value == '1':
+                            response_text = "Чтобы изменить смену, перейдите пожалуйста в раздел 'Смены'."
+                            bot.answer_callback_query(call.id, response_text,
+                                                      show_alert=True)
+                        else:
+                            self.key = self.key if 'i' in self.key else int(
+                                self.key)
+                            self.selected_number = self.status_dict[self.key]
+                            self.dop_smens()
+                elif call.data == "invent_selected":
                     self.select_new_invent = f'{self.select_invent}i'
-                self.select_invent = self.select_new_invent
-                self.invent()
-                # Обновляем кнопки
-            elif self.call.data.startswith("number_"):
-                selected_number = int(call.data.split("_")[1])
-                # Проверяем, выбран ли номер
-                if self.selected_number == selected_number:
-                    self.selected_number = None  # Снимаем выбор, если номер уже выбран
-                else:
-                    self.selected_number = selected_number  # Сохраняем новый выбранный номер
+                    self.select_invent = self.select_new_invent
+                    self.invent()
+                elif call.data == "invent_not_selected":
+                    if type(self.select_invent) == str:
+                        self.select_new_invent = int(
+                            str(self.select_invent).replace('i',
+                                                            ''))  # Убираем элемент из выбранных
+                    else:
+                        self.select_new_invent = f'{self.select_invent}i'
+                    self.select_invent = self.select_new_invent
+                    self.invent()
+                    # Обновляем кнопки
+                elif self.call.data.startswith("number_"):
+                    selected_number = int(call.data.split("_")[1])
+                    # Проверяем, выбран ли номер
+                    if self.selected_number == selected_number:
+                        self.selected_number = None  # Снимаем выбор, если номер уже выбран
+                    else:
+                        self.selected_number = selected_number  # Сохраняем новый выбранный номер
 
-                self.dop_smens()  # Обновляем кнопки
-            elif call.data == 'save_invent':
-                if 'i' not in str(self.key):
-                    self.key = int(self.key)
+                    self.dop_smens()  # Обновляем кнопки
+                elif call.data == 'save_invent':
+                    if 'i' not in str(self.key):
+                        self.key = int(self.key)
 
-                # print(int(self.key))
-                self.status_dict = {
-                    key if key != self.key else self.select_new_invent: value
-                    for key, value in
-                    self.status_dict.items()}
-                self.status_dict[self.select_new_invent] = self.select_n
+                    # print(int(self.key))
+                    self.status_dict = {
+                        key if key != self.key else self.select_new_invent: value
+                        for key, value in
+                        self.status_dict.items()}
+                    self.status_dict[self.select_new_invent] = self.select_n
 
-                self.actualy_smens()
-            elif call.data == 'cancel_invent':
-                if 'i' not in str(self.key):
-                    self.key = int(self.key)
+                    self.actualy_smens()
+                elif call.data == 'cancel_invent':
+                    if 'i' not in str(self.key):
+                        self.key = int(self.key)
 
-                # print(int(self.key))
-                self.status_dict = {
-                    key if key != self.key else int(str(self.key).replace('i', '')): value
-                    for key, value in
-                    self.status_dict.items()}
-                self.status_dict[int(str(self.key).replace('i', ''))] = None
-                self.actualy_smens()
-            elif call.data == 'cancel':
-                # Логика для отмены
-                self.actualy_smens()
-            elif call.data == 'save_smens':
-                self.status_dict[self.key] = self.selected_number
-                response_text = "Подработка сохранена"
-                bot.answer_callback_query(call.id, response_text,
-                                          show_alert=True
-                                          )
+                    # print(int(self.key))
+                    self.status_dict = {
+                        key if key != self.key else int(
+                            str(self.key).replace('i', '')): value
+                        for key, value in
+                        self.status_dict.items()}
+                    self.status_dict[
+                        int(str(self.key).replace('i', ''))] = None
+                    self.actualy_smens()
+                elif call.data == 'cancel':
+                    # Логика для отмены
+                    self.actualy_smens()
+                elif call.data == 'save_smens':
+                    self.status_dict[self.key] = self.selected_number
+                    response_text = "Подработка сохранена"
+                    bot.answer_callback_query(call.id, response_text,
+                                              show_alert=True
+                                              )
 
-                self.actualy_smens()
-            elif self.call.data in ['save_all_smens']:
-                self.table.edit_smens(self.month, self.select_user,
-                                      self.status_dict)
+                    self.actualy_smens()
+                elif self.call.data in ['save_all_smens']:
+                    self.table.edit_smens(self.month, self.select_user,
+                                          self.status_dict)
 
-                response_text = "Изменения сохранены."
-                bot.answer_callback_query(call.id, response_text,
-                                          show_alert=True)
-                self.smens_users()
-            elif self.call.data in ['cancel_all_smens']:
-                self.smens_users()
-
-    def temp(self):
-
-        # Обновляем текст и клавиатуру в том же сообщении
-        bot.edit_message_text(
-            text=f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-                 f"вернуться на шаг назад, используй команду /back. В начало /start\n\nКартинка выгружается, "
-                 f"пожалуйста ожидайте. В течении минуты она появиться. Если картинка "
-                 f"некорректно подгрузилась, попробуйте еще раз.\n\nСсылка на источник: <a href='{data_config['URL']}'>График работы</a>",
-            chat_id=self.call.message.chat.id,
-            message_id=self.call.message.message_id,
-            disable_web_page_preview=True
-        )
-
-    def image(self):
-        # Отправляем изображение
-        with open(path_to_img,
-                  'rb') as photo:
-            bot.send_photo(self.call.message.chat.id, photo)
+                    response_text = "Изменения сохранены."
+                    bot.answer_callback_query(call.id, response_text,
+                                              show_alert=True)
+                    self.smens_users()
+                elif self.call.data in ['cancel_all_smens']:
+                    self.smens_users()
 
     def show_month_selection(self):
         self.markup = InlineKeyboardMarkup()
@@ -411,8 +412,7 @@ class Main:
         self.markup.add(item3)
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nВыберете раздел:",
+            f"""Вы находитесь в разделе: "<u>{self.selected_month}</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start\n\nВыберете раздел:""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup)
@@ -429,9 +429,7 @@ class Main:
 
         bot.edit_message_text(
 
-            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Смены / подработки</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
 
             chat_id=self.call.message.chat.id,
 
@@ -445,29 +443,45 @@ class Main:
         self.markup = InlineKeyboardMarkup()
         item4 = InlineKeyboardButton("Добавить сотрудника",
                                      callback_data='add_employees')
-        item5 = InlineKeyboardButton("Убрать сотрудника",
+        item5 = InlineKeyboardButton("Удалить сотрудника",
                                      callback_data='dell_employee')
         self.markup.add(item4, item5)
         try:
             bot.edit_message_text(
-                f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-                f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
+                f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Сотрудники</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
                 chat_id=self.call.message.chat.id,
                 message_id=self.call.message.message_id,
                 reply_markup=self.markup)
         except:
 
             bot.send_message(self.user_id,
-                             f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-                             f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:",
+                             f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Сотрудники</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
+                             reply_markup=self.markup)
+
+    def data_image(self):
+        self.markup = InlineKeyboardMarkup()
+        item4 = InlineKeyboardButton("Перейти на сайт",
+                                     callback_data='site_image', url=data_config["URL"], disable_web_page_preview=True)
+        item5 = InlineKeyboardButton("Показать картинку ",
+                                     callback_data='image',
+                                     )
+        self.markup.add(item4, item5)
+        try:
+            bot.edit_message_text(
+                f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
+                chat_id=self.call.message.chat.id,
+                message_id=self.call.message.message_id,
+                reply_markup=self.markup)
+        except:
+
+            bot.send_message(self.user_id,
+                             f"""В""ы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
                              reply_markup=self.markup)
 
     def add_employees(self):
         # Редактируем текущее сообщение, чтобы запросить имя сотрудника
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nНапишите имя сотрудника "
-            f"для добавления",
+            f"""Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nНапишите имя сотрудника для добавления""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id
         )
@@ -479,10 +493,11 @@ class Main:
     def process_employee_name(self, message):
         users = DataCharts()
         if message.text not in ['/back',
-                                '/start'] and message.text not in users.get_users():
+                                '/start'] and message.text not in users.get_users(self.month):
             employee_name = message.text  # Получаем введенное имя сотрудника
+
             add_users = AddUser()
-            add_users.add(employee_name, self.actualy_months)
+            add_users.add(str(employee_name), self.actualy_months)
             bot.delete_message(chat_id=message.chat.id,
                                message_id=message.message_id)
             # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
@@ -504,7 +519,7 @@ class Main:
                     continue
             # bot.delete_message(chat_id=message.chat.id,
             #                    message_id=message.message_id)
-            if message.text in users.get_users():
+            if message.text in users.get_users(self.month):
                 self.state_stack.popitem()
                 response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
                 bot.answer_callback_query(self.call.id, response_text,
@@ -516,7 +531,8 @@ class Main:
 
     def dell_employee(self):
         self.table_data = DataCharts()
-        employees = self.table_data.get_users()  # Получаем список сотрудников за последний месяц
+        employees = self.table_data.get_users(
+            self.month)  # Получаем список сотрудников за последний месяц
 
         new_markup = InlineKeyboardMarkup()
 
@@ -545,8 +561,7 @@ class Main:
         new_markup.add(cancel_delete, delete_button)
 
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудников для удаления:",
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "Сотрудники" - "<u>Удалить сотрудника</u>". \n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудников для удаления:""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=new_markup
@@ -556,7 +571,7 @@ class Main:
         self.markup = types.InlineKeyboardMarkup()
         buttons = []
         # Получаем список пользователей
-        users = self.table_data.get_users()
+        users = self.table_data.get_users(self.month)
 
         for user in users:
             # Используем имя пользователя в качестве callback_data
@@ -565,10 +580,9 @@ class Main:
             buttons.append(item)
 
         self.markup.add(*buttons)
-
+        smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудника:",
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "Смены / подработки" - "<u>{smen}</u>". \n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите сотрудника:""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
@@ -593,7 +607,8 @@ class Main:
 
             button_text = f"{str(key).replace('i', '')}д ({get_days[int(str(key).replace('i', ''))]}) {emoji}"
             item = types.InlineKeyboardButton(button_text,
-                                              callback_data=f"{key}_{get_days[int(str(key).replace('i', ''))]}_{self.smens}_{value}")
+                                              callback_data=f"{key}_{get_days[int(str(key).replace('i', ''))]}_"
+                                                            f"{self.smens}_{value}")
             buttons.append(item)
 
         self.markup.add(*buttons)
@@ -605,9 +620,7 @@ class Main:
         self.markup.add(cancel_smens, save_smens)
         smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nРаздел '{smen}':\n❌ - выходной\n✅ "
-            f"- смена\n🟠 - подработка\n🟦 - смена (инвентаризация)",
+            f"""Вы находитесь в разделе:  "{self.selected_month}" - "Смены / подработки" - "{smen}"  - "<u>{self.select_user}</u>". \n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберете раздел:\n❌ - выходной\n✅ - смена\n🟠 - подработка\n🟦 - смена (инвентаризация)""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
@@ -634,11 +647,10 @@ class Main:
         save_button = types.InlineKeyboardButton("💾 Сохранить!",
                                                  callback_data='save_invent')
         self.markup.add(cancel_button, save_button)
-
+        smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}.\n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start\n\nБудет ли инвентаризация?\n✅ - Да\n❌ - Нет",
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "Смены / подработки" - "<u>{smen}</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start\n\nБудет ли инвентаризация?\n✅ - Да\n❌ - Нет""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
@@ -663,12 +675,10 @@ class Main:
         save_button = types.InlineKeyboardButton("💾 Сохранить!",
                                                  callback_data='save_smens')
         self.markup.add(cancel_button, save_button)
-
+        smen = 'Смены' if self.smens == 'smens' else 'Подработки'
         # Отправляем сообщение с кнопками
         bot.edit_message_text(
-            f"Вы находитесь в разделе: {self.selected_month}. \n\nИспользуй кнопки для навигации. Чтобы "
-            f"вернуться на шаг назад, используй команду /back. В начало /start \n\nРаздел 'Подработки/ч':\n❌ - не "
-            f"выбранные часы\n✅ - выбранные часы",
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "Смены / подработки" - "<u>{smen}</u>". \n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберете подработку:\n❌ - не выбранные часы\n✅ - выбранные часы""",
             chat_id=self.call.message.chat.id,
             message_id=self.call.message.message_id,
             reply_markup=self.markup
