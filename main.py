@@ -20,7 +20,9 @@ import schedule
 
 # Создаем экземпляр бота
 bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
+
                       parse_mode='HTML')
+# -------------------------------------сохранение  новых пользователей --------------------------------
 user_ids = set()
 USER_IDS_FILE = 'user_ids.json'
 
@@ -37,6 +39,8 @@ def save_user_ids(userids):
         json.dump(list(userids), file)
 
 
+# -------------------------------------сохранение  новых пользователей --------------------------------
+# -------------------------------------Создание нового графика   --------------------------------
 def create_new_chart():
     new = CreateChart()
     new.new_chart()
@@ -55,10 +59,13 @@ def create_new_chart():
                              'Была попытка создать новый график, что то пошло не так, необходимо проверить')
 
 
+# -------------------------------------Создание нового графика   --------------------------------
+
 # Отключаем предупреждения
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
+# -------------------------------------Планировщик (для создания нового графика за 10 дней)  --------------------------------
 def job():
     if datetime.datetime.now().day == 20:
         create_new_chart()
@@ -66,6 +73,8 @@ def job():
 
 schedule.every().day.at("12:00").do(job)
 
+
+# -------------------------------------Планировщик (для создания нового графика за 10 дней)  --------------------------------
 
 class Main:
     # дополнительный аргумент, для создания нового листа
@@ -695,4 +704,8 @@ def run_schedule():
 schedule_thread = threading.Thread(target=run_schedule)
 schedule_thread.start()
 Main()
-bot.infinity_polling(timeout=90, long_polling_timeout=5)
+while True:
+    try:
+        bot.infinity_polling(timeout=90, long_polling_timeout=5)
+    except Exception as e:
+        print(f"Error: {e}")
