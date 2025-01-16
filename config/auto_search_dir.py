@@ -39,6 +39,8 @@ path_to_config_json = find_file_in_project('config.json',
 
 path_to_img = find_file_in_project('months.png',
                                    path_to_project_folder)
+path_myapplog = find_file_in_project('myapp.log',
+                                   path_to_project_folder)
 
 path_to_test1_json = r"G:\Мой диск\График_работы.xlsx"
 

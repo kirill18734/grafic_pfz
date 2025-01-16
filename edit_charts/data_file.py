@@ -1,9 +1,17 @@
+import logging
+
 from openpyxl import load_workbook
 from openpyxl.styles import *
 from datetime import datetime
 import calendar
-from config.auto_search_dir import path_to_test1_json
+from config.auto_search_dir import path_to_test1_json, path_myapplog
 
+logging.basicConfig(
+    filename=path_myapplog,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
@@ -71,6 +79,8 @@ def get_font_style(color):
     return [thin_border, font_style, fill_style, number_format, protection_style, alignment_style, value]
 
 
+# ------------------------------------- Основной файл данных  --------------------------------
+
 class DataCharts:
     def __init__(self):
         self.list_months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май',
@@ -78,7 +88,7 @@ class DataCharts:
                             'Декабрь']
         self.file = load_workbook(path_to_test1_json)  # загружаем файл
 
-    # получение активных сотрудников , за последний месяц
+    # получение всех сотрудников из графика
     def get_users(self, month):
         get_users = self.ineration_all_last_table(month, max_col=2, min_col=2, min_row=5)
         users = []
@@ -89,6 +99,7 @@ class DataCharts:
                 break
         return users
 
+    # данные о текущем и следующием месяце
     def data_months(self):
         # Получаем текущую дату
         current_date = datetime.now()
@@ -120,7 +131,7 @@ class DataCharts:
         # Получаем первый день недели следующего месяца
         first_weekday_next_month = calendar.monthrange(next_year, next_month_value)[0]
         new_index = month % len(self.list_months)
-        # количество дней в следующем месяце, разницу в днях,  индекс текущего месяца, индекс следующего месяца
+        # возвращет список из (количество дней  текущего месяца, количесвто дней у следующего месяца,индекс текущего месяца ,  индекс следующиего месяца, индекс первого дня дня недели у следующиего месяца )
         difference = [current_month_days,
                       (next_month_days - current_month_days) + 3, month - 1, new_index, first_weekday_next_month]
         return difference

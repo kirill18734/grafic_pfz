@@ -1,9 +1,17 @@
+import logging
 from copy import copy
 
-from config.auto_search_dir import path_to_test1_json
+from config.auto_search_dir import path_to_test1_json, path_myapplog
 from edit_charts.data_file import DataCharts, get_font_style
 
+logging.basicConfig(
+    filename=path_myapplog,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
+# -------------------------------------создание нового месяца --------------------------------
 class CreateChart:
 
     def __init__(self):
@@ -23,6 +31,7 @@ class CreateChart:
         self.list_days_2 = {28: "AE", 29: "AF", 30: "AG", 31: "AH",
                             32: "AI", 33: "AJ", 34: "AK"}
 
+    # добавление новой строчки
     def add_colls(self, cell, i, new_value):
         # присваиваем скопированному последнему столбцу переменную,
         # где будет все храниться

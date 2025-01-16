@@ -1,13 +1,13 @@
 import datetime
 import json
+import logging
 import os
 
 from telebot import types
 from telebot.types import BotCommand, InlineKeyboardMarkup, \
     InlineKeyboardButton
 import telebot
-from config.auto_search_dir import data_config, path_to_img
-import urllib3
+from config.auto_search_dir import data_config, path_to_img, path_myapplog
 from edit_charts.create_new_chart import CreateChart
 from edit_charts.delete_user import DeleteUsers
 from edit_charts.data_file import DataCharts
@@ -18,6 +18,13 @@ import threading
 import time
 import schedule
 
+# Настройка логирования с указанием формата
+logging.basicConfig(
+    filename=path_myapplog,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Создаем экземпляр бота
 bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
 
@@ -39,7 +46,6 @@ def save_user_ids(userids):
         json.dump(list(userids), file)
 
 
-# -------------------------------------сохранение  новых пользователей --------------------------------
 # -------------------------------------Создание нового графика   --------------------------------
 def create_new_chart():
     new = CreateChart()
@@ -59,13 +65,7 @@ def create_new_chart():
                              'Была попытка создать новый график, что то пошло не так, необходимо проверить')
 
 
-# -------------------------------------Создание нового графика   --------------------------------
-
-# Отключаем предупреждения
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-
-# -------------------------------------Планировщик (для создания нового графика за 10 дней)  --------------------------------
+# -------------------------------------Планировщик (для создания нового графика за 20 числа каждого месяца )  --------------------------------
 def job():
     if datetime.datetime.now().day == 20:
         create_new_chart()
@@ -73,8 +73,6 @@ def job():
 
 schedule.every().day.at("12:00").do(job)
 
-
-# -------------------------------------Планировщик (для создания нового графика за 10 дней)  --------------------------------
 
 class Main:
     # дополнительный аргумент, для создания нового листа
@@ -113,8 +111,7 @@ class Main:
         # если крайний лист, будет совпадать с текущим месяцем, то значит будет одна кнопка для текущего месяца,
         # если нет, то 2 для нового графика и для старого
         if self.table_data.list_months[self.table_data.data_months()[2]] in str(self.last_list.title):
-            self.actualy_months = [
-                self.table_data.list_months[self.table_data.data_months()[2]]]
+            self.actualy_months = [self.table_data.list_months[self.table_data.data_months()[2]]]
             return [
                 f'Текущий месяц ({self.table_data.list_months[self.table_data.data_months()[2]]})']
         else:
@@ -137,55 +134,60 @@ class Main:
             self.user_id = message.chat.id
             user_ids.add(self.user_id)
             save_user_ids(user_ids)
+
             # Удаляем сообщения в диапазоне
-            for id_ in range(message.message_id - 20, message.message_id + 1):
-                try:
-                    bot.delete_message(chat_id=message.chat.id,
-                                       message_id=id_)
-                except:
-                    continue
+            if message.message_id:
+                for id_ in range(max(1, message.message_id - 20), message.message_id + 1):
+                    try:
+                        bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                    except Exception as error:
+                        print(f"Ошибка при удалении сообщения в handle_start_main: {id_}: {error}")
             # После завершения цикла и удаления сообщений вызываем метод выбора месяца
             self.show_month_selection()
 
+        # -------------------------------------История сообщений  --------------------------------
         @bot.message_handler(commands=['back'])
         def handle_back(message):
-            bot.delete_message(chat_id=message.chat.id,
-                               message_id=message.message_id)
+            if message.message_id:
+                try:
+                    bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+                except Exception as error:
+                    print(f"Ошибка при удалении сообщения в handle_back (1): {message.message_id}: {error}")
+            # словарь где находятяться сохраненные сообщения для одной сесии
+            while self.state_stack:
+                last_key, last_function = self.state_stack.popitem()
 
-            last_key, last_function = self.state_stack.popitem()
-            if message == 'get_image':
-                handle_start_main(message)
-            if 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(
-                    last_key):
-                for id_ in range(message.message_id - 20,
-                                 message.message_id + 1):
+                if message == 'get_image':
+                    handle_start_main(message)
+                    break  # Выход из цикла, если обработка завершена
+                elif 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(last_key):
+                    if message.message_id:
+                        for id_ in range(max(1, message.message_id - 20), message.message_id + 1):
+                            try:
+                                bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                            except Exception as error:
+                                print(f"Ошибка при удалении сообщения в handle_back (2) : {id_}: {error}")
+
                     try:
-                        bot.delete_message(chat_id=message.chat.id,
-                                           message_id=id_)
-                    except:
-                        continue
-                last_function()
-            else:
-                # for id_ in range(message.message_id - 20,
-                #                  message.message_id + 1):
-                #     try:
-                #         bot.delete_message(chat_id=message.chat.id,
-                #                            message_id=id_)
-                #     except:
-                #         continue
-                last_function()
-
-        @bot.callback_query_handler(
-            func=lambda call: call.data == 'start_command')
-        def handle_start_command(call):
-            # Вызываем команду /start
-            handle_start_main(call.message)
+                        last_function()  # Попытка вызвать функцию
+                        break  # Выход из цикла, если вызов завершился успешно
+                    except Exception as e:
+                        print(f"Ошибка при вызове last_function: {e}")
+                        # Если возникла ошибка, продолжаем цикл, чтобы вызвать следующую функцию
+                else:
+                    try:
+                        last_function()  # Попытка вызвать функцию
+                        break  # Выход из цикла, если вызов завершился успешно
+                    except Exception as e:
+                        print(f"Ошибка при вызове last_function: {e}")
+                        # Если возникла ошибка, продолжаем цикл, чтобы вызвать следующую функцию
 
         @bot.callback_query_handler(func=lambda call: True)
         def handle_query(call):
             self.call = call
             if 'Текущий месяц' in self.call.data or 'Следующий месяц' in self.call.data:
-                self.state_stack[self.call.data] = self.show_month_selection
+                if self.call.data not in self.status_dict:
+                    self.state_stack[self.call.data] = self.show_month_selection
 
             if not self.state_stack or (
                     'Текущий месяц' not in str(list(self.state_stack.keys())[0]) and
@@ -206,7 +208,7 @@ class Main:
                     # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
                     self.show_sments_dop_sments()
                 elif self.call.data in ['image']:
-                    response_text = f"""Заявка на создание картинки 'График работы' создана. Пожалуйста ожидайте. В течении 30сек картинка отправиться."""
+                    response_text = f"""Заявка на создание картинки  создана. Пожалуйста ожидайте. В течении 30сек картинка отправиться. Если """
                     bot.answer_callback_query(self.call.id, response_text,
                                               show_alert=True)
                     open_site(self.month)
@@ -234,11 +236,13 @@ class Main:
                     self.smens = self.call.data
                     self.smens_users()
                 elif self.call.data in ['add_employees']:
-                    self.state_stack[self.call.data] = self.add_del_employees
+                    if self.call.data not in self.status_dict:
+                        self.state_stack[self.call.data] = self.add_del_employees
                     self.add_employees()
 
                 elif self.call.data in ['dell_employee']:
-                    self.state_stack[self.call.data] = self.add_del_employees
+                    if self.call.data not in self.status_dict:
+                        self.state_stack[self.call.data] = self.add_del_employees
                     self.dell_employee()
 
                 elif self.call.data.startswith('select_employee_'):
@@ -251,7 +255,6 @@ class Main:
 
                 elif self.call.data in ['cancel_delete']:
                     self.add_del_employees()
-                #     self.state_stack[self.call.data] = self.dell_employee
 
                 elif self.call.data.startswith('user_'):
                     self.table = Editsmens()
@@ -264,15 +267,21 @@ class Main:
                 # удаления
                 elif self.call.data == 'confirm_delete':
                     if self.selected_employees:
-
+                        print(list(self.selected_employees), self.actualy_months)
                         delete_user = DeleteUsers()
-                        delete_user.delete(list(self.selected_employees),
-                                           self.actualy_months)
+                        if list(self.selected_employees) and self.actualy_months:
+                            delete_user.delete(list(self.selected_employees),
+                                               self.actualy_months)
 
-                        response_text = "Сотрудник(и) удален(ы)"
-                        bot.answer_callback_query(call.id, response_text,
-                                                  show_alert=True)
-                        self.add_del_employees()
+                            response_text = "Сотрудник(и) удален(ы)"
+                            bot.answer_callback_query(call.id, response_text,
+                                                      show_alert=True)
+                            self.add_del_employees()
+                        else:
+                            response_text = "Не удалось удалить пользователя, необходимо подключиться, возникла ошибка"
+                            bot.answer_callback_query(call.id, response_text,
+                                                      show_alert=True)
+                            self.add_del_employees()
                     else:
                         response_text = "Чтобы изменить подработку, перейдите пожалуйста в раздел 'Подработки'."
                         bot.answer_callback_query(call.id, response_text,
@@ -377,13 +386,19 @@ class Main:
 
                     self.actualy_smens()
                 elif self.call.data in ['save_all_smens']:
-                    self.table.edit_smens(self.month, self.select_user,
-                                          self.status_dict)
+                    if self.month and self.select_user and self.status_dict:
+                        self.table.edit_smens(self.month, self.select_user,
+                                              self.status_dict)
 
-                    response_text = "Изменения сохранены."
-                    bot.answer_callback_query(call.id, response_text,
-                                              show_alert=True)
-                    self.smens_users()
+                        response_text = "Изменения сохранены."
+                        bot.answer_callback_query(call.id, response_text,
+                                                  show_alert=True)
+                        self.smens_users()
+                    else:
+                        response_text = "Не удалось сохранить смены, необходимо подключиться, возникла ошибка"
+                        bot.answer_callback_query(self.call.id, response_text,
+                                                  show_alert=True)
+                        self.smens_users()
                 elif self.call.data in ['cancel_all_smens']:
                     self.smens_users()
 
@@ -404,8 +419,7 @@ class Main:
                 message_id=self.call.message_id,
                 reply_markup=self.markup
             )
-
-        except:
+        except Exception as error:
             bot.send_message(self.user_id, "Выберите месяц:",
                              reply_markup=self.markup)
 
@@ -455,17 +469,11 @@ class Main:
         item5 = InlineKeyboardButton("Удалить сотрудника",
                                      callback_data='dell_employee')
         self.markup.add(item4, item5)
-        try:
-            bot.edit_message_text(
-                f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Сотрудники</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
-                chat_id=self.call.message.chat.id,
-                message_id=self.call.message.message_id,
-                reply_markup=self.markup)
-        except:
-
-            bot.send_message(self.user_id,
-                             f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Сотрудники</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
-                             reply_markup=self.markup)
+        bot.edit_message_text(
+            f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Сотрудники</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
+            chat_id=self.call.message.chat.id,
+            message_id=self.call.message.message_id,
+            reply_markup=self.markup)
 
     def data_image(self):
         self.markup = InlineKeyboardMarkup()
@@ -481,11 +489,11 @@ class Main:
                 chat_id=self.call.message.chat.id,
                 message_id=self.call.message.message_id,
                 reply_markup=self.markup)
-        except:
-
+        except Exception as error:
             bot.send_message(self.user_id,
                              f"""В""ы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
                              reply_markup=self.markup)
+            print(f'Ошибка при удалении сообщения в add_del_employees: {error}')
 
     def add_employees(self):
         # Редактируем текущее сообщение, чтобы запросить имя сотрудника
@@ -504,39 +512,42 @@ class Main:
         if message.text not in ['/back',
                                 '/start'] and message.text not in users.get_users(self.month):
             employee_name = message.text  # Получаем введенное имя сотрудника
+            if str(employee_name) and self.actualy_months:
+                add_users = AddUser()
 
-            add_users = AddUser()
-            add_users.add(str(employee_name), self.actualy_months)
-            bot.delete_message(chat_id=message.chat.id,
-                               message_id=message.message_id)
-            # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
-            response_text = f"Сотрудник {employee_name} добавлен."
-            bot.answer_callback_query(self.call.id, response_text,
-                                      show_alert=True)
-
-            self.add_del_employees()
-        # elif message.text in ['/back']:
-        #     bot.delete_message(chat_id=message.chat.id,
-        #                        message_id=message.message_id)
-        #     # self.add_del_employees()
-        else:
-            for id_ in range(message.message_id - 1, message.message_id + 1):
-                try:
-                    bot.delete_message(chat_id=message.chat.id,
-                                       message_id=message.message_id)
-                except:
-                    continue
-            # bot.delete_message(chat_id=message.chat.id,
-            #                    message_id=message.message_id)
-            if message.text in users.get_users(self.month):
-                self.state_stack.popitem()
-                response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
+                add_users.add(str(employee_name), self.actualy_months)
+                bot.delete_message(chat_id=message.chat.id,
+                                   message_id=message.message_id)
+                # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
+                response_text = f"Сотрудник {employee_name} добавлен."
                 bot.answer_callback_query(self.call.id, response_text,
                                           show_alert=True)
 
-            if message.text == '/back':
-                self.state_stack.popitem()
                 self.add_del_employees()
+            else:
+                response_text = "Не удалось добавить пользователя, необходимо подключиться, возникла ошибка"
+                bot.answer_callback_query(self.call.id, response_text,
+                                          show_alert=True)
+                self.add_del_employees()
+        else:
+            if message.message_id:
+                for id_ in range(max(1, message.message_id - 1), message.message_id + 1):
+                    try:
+                        bot.delete_message(chat_id=message.chat.id, message_id=id_)
+                    except Exception as error:
+                        print(f"Ошибка при удалении сообщения в process_employee_name: {id_}: {error}")
+
+            elif message.text in users.get_users(self.month):
+                if self.state_stack.popitem():
+                    self.state_stack.popitem()
+                    response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
+                    bot.answer_callback_query(self.call.id, response_text,
+                                              show_alert=True)
+
+            elif message.text == '/back':
+                if self.state_stack.popitem():
+                    self.state_stack.popitem()
+                    self.add_del_employees()
 
     def dell_employee(self):
         self.table_data = DataCharts()
@@ -544,23 +555,25 @@ class Main:
             self.month)  # Получаем список сотрудников за последний месяц
 
         new_markup = InlineKeyboardMarkup()
+        try:
+            # Добавляем кнопки для сотрудников по 2 в строке
+            for i in range(0, len(employees), 2):
+                # Берем два сотрудника за раз
+                row_buttons = []
+                for j in range(2):
+                    if i + j < len(
+                            employees):  # Проверяем, чтобы не выйти за пределы списка
+                        employee = employees[i + j]
+                        is_selected = employee in self.selected_employees
+                        button_text = f"{employee} {'❌' if is_selected else '✅'}"
+                        item = InlineKeyboardButton(button_text,
+                                                    callback_data=f'select_employee_{employee}')
+                        row_buttons.append(item)
 
-        # Добавляем кнопки для сотрудников по 2 в строке
-        for i in range(0, len(employees), 2):
-            # Берем два сотрудника за раз
-            row_buttons = []
-            for j in range(2):
-                if i + j < len(
-                        employees):  # Проверяем, чтобы не выйти за пределы списка
-                    employee = employees[i + j]
-                    is_selected = employee in self.selected_employees
-                    button_text = f"{employee} {'❌' if is_selected else '✅'}"
-                    item = InlineKeyboardButton(button_text,
-                                                callback_data=f'select_employee_{employee}')
-                    row_buttons.append(item)
-
-            # Добавляем кнопки в строку
-            new_markup.row(*row_buttons)
+                # Добавляем кнопки в строку
+                new_markup.row(*row_buttons)
+        except Exception as error:
+            print(f'Ошибка при удалении сообщения в dell_employee:{error}')
 
         # Добавляем кнопку "Удалить"
         delete_button = InlineKeyboardButton("🗑️ Удалить!",
@@ -665,6 +678,7 @@ class Main:
             reply_markup=self.markup
         )
 
+    # кнопки для подработок
     def dop_smens(self):
         self.markup = types.InlineKeyboardMarkup()
         # Создаем кнопки от 1 до 12
@@ -694,6 +708,7 @@ class Main:
         )
 
 
+# запуск планировщика
 def run_schedule():
     while True:
         schedule.run_pending()
@@ -703,6 +718,7 @@ def run_schedule():
 # Запускаем планировщик в отдельном потоке
 schedule_thread = threading.Thread(target=run_schedule)
 schedule_thread.start()
+# запуск бота
 Main()
 while True:
     try:

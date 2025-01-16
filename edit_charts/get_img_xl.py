@@ -1,10 +1,18 @@
+import logging
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 
-from config.auto_search_dir import data_config, path_to_img
+from config.auto_search_dir import data_config, path_to_img, path_myapplog
+
+logging.basicConfig(
+    filename=path_myapplog,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
 def open_site(month):

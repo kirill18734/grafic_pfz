@@ -1,0 +1,1336 @@
+2025-01-17 00:01:49,632 - INFO - Ёто информационное сообщение.
+2025-01-17 00:03:13,766 - INFO - Ёто информационное сообщение.
+2025-01-17 00:03:26,897 - ERROR - Infinity polling exception: [Errno 13] Permission denied: 'G:\\ћой диск\\√рафик_работы.xlsx'
+2025-01-17 00:03:26,897 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 147, in handle_start_main
+    self.show_month_selection()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 391, in show_month_selection
+    for month in self.get_months():
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 109, in get_months
+    self.table_data = DataCharts()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\data_file.py", line 89, in __init__
+    self.file = load_workbook(path_to_test1_json)  # загружаем файл
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "C:\Users\kiraf\AppData\Local\Programs\Python\Python38\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+PermissionError: [Errno 13] Permission denied: 'G:\\ћой диск\\√рафик_работы.xlsx'
+
+2025-01-17 00:04:16,027 - ERROR - Infinity polling exception: [Errno 13] Permission denied: 'G:\\ћой диск\\√рафик_работы.xlsx'
+2025-01-17 00:04:16,027 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 147, in handle_start_main
+    self.show_month_selection()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 391, in show_month_selection
+    for month in self.get_months():
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 109, in get_months
+    self.table_data = DataCharts()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\data_file.py", line 89, in __init__
+    self.file = load_workbook(path_to_test1_json)  # загружаем файл
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\reader\excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "C:\Users\kiraf\AppData\Local\Programs\Python\Python38\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+PermissionError: [Errno 13] Permission denied: 'G:\\ћой диск\\√рафик_работы.xlsx'
+
+2025-01-17 00:07:20,182 - INFO - Ёто информационное сообщение.
+2025-01-17 00:10:48,642 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:10:48,643 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 80, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:11:14,240 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:11:14,241 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 80, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:11:52,657 - INFO - Ёто информационное сообщение.
+2025-01-17 00:12:01,776 - ERROR - Infinity polling exception: 'Worksheet None does not exist.'
+2025-01-17 00:12:01,776 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 80, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: 'Worksheet None does not exist.'
+
+2025-01-17 00:16:31,928 - INFO - Ёто информационное сообщение.
+2025-01-17 00:25:08,006 - INFO - Ёто информационное сообщение.
+2025-01-17 00:25:18,465 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:25:18,466 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 80, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:30:18,715 - INFO - Ёто информационное сообщение.
+2025-01-17 00:32:38,602 - INFO - Ёто информационное сообщение.
+2025-01-17 00:32:56,459 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:32:56,459 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 78, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:33:56,057 - INFO - Ёто информационное сообщение.
+2025-01-17 00:34:04,907 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:34:04,907 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 78, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:36:21,992 - INFO - Ёто информационное сообщение.
+2025-01-17 00:36:33,889 - ERROR - Infinity polling exception: "Worksheet ['январь'] does not exist."
+2025-01-17 00:36:33,891 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 80, in delete
+    self.file = self.file[month]
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\workbook\workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: "Worksheet ['январь'] does not exist."
+
+2025-01-17 00:37:49,028 - INFO - Ёто информационное сообщение.
+2025-01-17 00:37:58,845 - ERROR - Infinity polling exception: '>' not supported between instances of 'str' and 'int'
+2025-01-17 00:37:58,845 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1110, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 266, in handle_query
+    delete_user.delete(list(self.selected_employees),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 90, in delete
+    self.unmerge(len(self.table.get_users(month)) + 5,
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\edit_charts\delete_user.py", line 65, in unmerge
+    self.file.delete_rows(row)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\worksheet\worksheet.py", line 737, in delete_rows
+    remainder = _gutter(idx, amount, self.max_row)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\openpyxl\worksheet\worksheet.py", line 906, in _gutter
+    gutter = range(max(max_val+1-offset, idx), min(idx+offset, max_val)+1)
+TypeError: '>' not supported between instances of 'str' and 'int'
+
+2025-01-17 00:39:11,198 - INFO - Ёто информационное сообщение.
+2025-01-17 00:39:11,676 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:11,676 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:14,977 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:14,978 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:15,282 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:15,282 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:18,843 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:18,843 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:19,392 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:19,392 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:23,452 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:23,453 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:24,501 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:24,501 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:29,557 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:29,558 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:31,612 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:31,614 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:34,913 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:34,914 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:38,973 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:38,973 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:42,275 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:42,276 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:50,390 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:50,390 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:39:53,696 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:39:53,696 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:40:09,755 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:40:09,755 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:40:13,065 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:40:13,065 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:40:45,145 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:40:45,147 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:40:48,455 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:40:48,456 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:41:48,515 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:41:48,515 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:41:51,823 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:41:51,823 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:42:51,872 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:42:51,872 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:42:55,182 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:42:55,182 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:43:55,472 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:43:55,474 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:43:59,114 - INFO - Ёто информационное сообщение.
+2025-01-17 00:43:59,673 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:43:59,673 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:44:59,724 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:44:59,724 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:45:03,021 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:45:03,022 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:46:03,071 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:46:03,071 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:46:06,369 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:46:06,370 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:47:06,428 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:47:06,428 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:47:09,776 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:47:09,777 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:48:09,832 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:48:09,832 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:48:13,206 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:48:13,207 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:49:13,380 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:49:13,380 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:49:16,687 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:49:16,689 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:50:16,737 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:50:16,737 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:50:20,037 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:50:20,037 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:51:20,096 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:51:20,096 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:51:23,410 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:51:23,410 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:51:34,079 - INFO - Ёто информационное сообщение.
+2025-01-17 00:52:23,510 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:52:23,512 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:52:26,820 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:52:26,820 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:53:27,000 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:53:27,020 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:53:38,764 - INFO - Ёто информационное сообщение.
+2025-01-17 00:54:06,049 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2025-01-17 00:54:06,049 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 179, in handle_back
+    last_function()
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 468, in add_del_employees
+    bot.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 4875, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 1465, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+
+2025-01-17 00:54:09,178 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2025-01-17 00:54:09,180 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 179, in handle_back
+    last_function()
+  File "C:/Users/kiraf/PycharmProjects/grafic_pfz/main.py", line 468, in add_del_employees
+    bot.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 4875, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 1465, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+
+2025-01-17 00:54:27,086 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:54:27,088 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:54:30,395 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:54:30,395 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:55:30,451 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:55:30,452 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:55:33,747 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-01-17 00:55:33,747 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 111, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 330, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+
+2025-01-17 00:56:25,976 - INFO - Ёто информационное сообщение.
+2025-01-17 00:56:58,587 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2025-01-17 00:56:58,587 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 179, in handle_back
+    last_function()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 468, in add_del_employees
+    bot.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 4875, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 1465, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+
+2025-01-17 00:57:01,131 - ERROR - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2025-01-17 00:57:01,132 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 150, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\util.py", line 93, in run
+    task(*args, **kwargs)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 8945, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 179, in handle_back
+    last_function()
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\main.py", line 468, in add_del_employees
+    bot.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\__init__.py", line 4875, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 1465, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+  File "C:\Users\kiraf\PycharmProjects\grafic_pfz\venv\lib\site-packages\telebot\apihelper.py", line 195, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+
+2025-01-17 01:02:43,320 - INFO - Ёто информационное сообщение.

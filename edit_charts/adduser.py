@@ -1,9 +1,18 @@
+import logging
 import re
-from config.auto_search_dir import path_to_test1_json
+from config.auto_search_dir import path_to_test1_json, path_myapplog
 from edit_charts.data_file import DataCharts, get_font_style
 from copy import copy
 
+logging.basicConfig(
+    filename=path_myapplog,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
+
+# -------------------------------------добавление пользователя --------------------------------
 class AddUser:
     def __init__(self):
         self.month = None
@@ -12,6 +21,7 @@ class AddUser:
         self.name = None
         self.table = DataCharts()
 
+    # проставляем каждому пользователя акутальные подсчет через =SUMIF
     def edit_summ(self):
         count = 5
         rows_to_update = []
@@ -39,8 +49,10 @@ class AddUser:
                     )
             count += 1
 
+    # объединение тех ячеек, которые были разъеденены
     def merge(self, last_index):
         # проставляем имя (дополнительная)
+
         self.file.cell(row=last_index, column=13, value=self.name)
         # проставляем имя (основная)
         self.file.cell(row=len(self.table.get_users(self.month)) + 4, column=2,
@@ -72,6 +84,7 @@ class AddUser:
                               end_row=row_merge,
                               end_column=20)
 
+    # разъединение необходимых ячеек
     def unmerge(self, start_row):
         merged_cells = self.file.merged_cells.ranges
         self.merged_ranges = []  # Список для хранения диапазонов объединенных ячеек
@@ -85,60 +98,58 @@ class AddUser:
                     merged)  # Сохраняем диапазон для последующего объединения
                 self.file.unmerge_cells(str(merged))
 
-    def add_colls(self, cell, i, new_value):
-        # стилизация для основной таблицы
-        if cell.row <= len(
-                self.table.get_users(self.month)) + 5 and cell.column > 3:
+    # копирование 2 последних ячеек в последних строчках 2 таблиц, где пользовати и добавление в следующие
+    def add_colls(self, row):
+        for row in self.file.iter_rows(min_row=row, max_row=row):
+            for cell in row:  # получаем каждую ячейку
+                new_value = cell.value
 
-            # присваиваем скопированному последнему столбцу переменную, где будет все храниться
-            new_cell = self.file.cell(row=cell.row + i,
-                                      column=cell.column)
-            new_cell.border = get_font_style('green')[0]
-            new_cell.font = get_font_style('green')[1]
-            new_cell.fill = get_font_style('green')[2]
-            new_cell.number_format = get_font_style('green')[3]
-            new_cell.protection = get_font_style('green')[4]
-            new_cell.alignment = get_font_style('green')[5]
-            new_cell.value = get_font_style('green')[6]
+                # стилизация для основной таблицы
+                if cell.row <= len(
+                        self.table.get_users(self.month)) + 5 and cell.column > 3:
 
-        # дополнительная
-        else:
+                    # присваиваем скопированному последнему столбцу переменную, где будет все храниться
+                    new_cell = self.file.cell(row=cell.row + 1,
+                                              column=cell.column)
+                    # делаем новую стилизацию для основного столбца для новой ячейки (убираем все смены, которые были у предыдущего пользователя, с которого скопировали строчку  )
+                    new_cell.border = get_font_style('green')[0]
+                    new_cell.font = get_font_style('green')[1]
+                    new_cell.fill = get_font_style('green')[2]
+                    new_cell.number_format = get_font_style('green')[3]
+                    new_cell.protection = get_font_style('green')[4]
+                    new_cell.alignment = get_font_style('green')[5]
+                    new_cell.value = get_font_style('green')[6]
 
-            # присваиваем скопированному последнему столбцу переменную, где будет все храниться
-            new_cell = self.file.cell(row=cell.row + i,
-                                      column=cell.column,
-                                      value=new_value)
-            # если у этой ячейки есть стили, то также копируем их
-            if cell.has_style:
-                new_cell.font = copy(cell.font)
-                new_cell.border = copy(cell.border)
-                new_cell.fill = copy(cell.fill)
-                new_cell.number_format = copy(
-                    cell.number_format)
-                new_cell.protection = copy(cell.protection)
-                new_cell.alignment = copy(cell.alignment)
-            # копируем ширину ячейки
-            original_width = \
-                self.file.column_dimensions[
-                    cell.column_letter].width
-            new_column_letter = self.file.cell(
-                row=cell.row,
-                column=cell.column + i).column_letter
-            self.file.column_dimensions[
-                new_column_letter].width = original_width
+                # дополнительная
+                else:
+                    # присваиваем скопированному последнему столбцу переменную, где будет все храниться
+                    new_cell = self.file.cell(row=cell.row + 1,
+                                              column=cell.column,
+                                              value=new_value)
+                    # если у этой ячейки есть стили, то также копируем их
+                    if cell.has_style:
+                        new_cell.font = copy(cell.font)
+                        new_cell.border = copy(cell.border)
+                        new_cell.fill = copy(cell.fill)
+                        new_cell.number_format = copy(
+                            cell.number_format)
+                        new_cell.protection = copy(cell.protection)
+                        new_cell.alignment = copy(cell.alignment)
+                    # копируем ширину ячейки
+                    original_width = \
+                        self.file.column_dimensions[
+                            cell.column_letter].width
+                    new_column_letter = self.file.cell(
+                        row=cell.row,
+                        column=cell.column + 1).column_letter
+                    self.file.column_dimensions[
+                        new_column_letter].width = original_width
 
-            # Копируем высоту ячейки
-            original_height = self.file.row_dimensions[cell.row].height
-            self.file.row_dimensions[new_cell.row].height = original_height
+                    # Копируем высоту ячейки
+                    original_height = self.file.row_dimensions[cell.row].height
+                    self.file.row_dimensions[new_cell.row].height = original_height
 
-    def copy_row(self, row):
-
-        for i in range(1, 2):
-            for row in self.file.iter_rows(min_row=row, max_row=row):
-                for cell in row:  # получаем каждую ячейку
-                    new_value = cell.value
-                    self.add_colls(cell, i, new_value)
-
+    # основная фукнция по добавлению,которая объединяет другие
     def add(self, name, months):
         for month in months:
             self.month = month
@@ -155,21 +166,22 @@ class AddUser:
                                row if
                                cell.value is not None and cell.value != '' and cell.value != ' '][
                 -1]
-
+            # перед каким либо изменением необходимо обязтельно разъеденить все ячейки которые объеденены
             self.unmerge(len(self.table.get_users(self.month)) + 4)
             # вставляем новую строчку в основной стобцец
             self.file.insert_rows(len(self.table.get_users(self.month)) + 5)
             # вставляем новую строчку в дополнительный столбец
             self.file.insert_rows(last_user_undex + 2)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (основной)
-            self.copy_row(len(self.table.get_users(self.month)) + 4)
+            self.add_colls(len(self.table.get_users(self.month)) + 4)
             # вызываем фукнцию для копирования последней строчки и вставке в новую (дополнительный)
-            self.copy_row(last_user_undex + 1)
+            self.add_colls(last_user_undex + 1)
             # обратно все склеиваем
             self.merge(last_user_undex + 2)
             # вызываем функцию для обновления формул автоподсчета
             self.edit_summ()
             self.table.file.save(path_to_test1_json)
+            self.table.file.close()
 
 # test = AddUser()
 # test.add('Домой', ['Январь', 'Февраль', 'Декабрь'])
