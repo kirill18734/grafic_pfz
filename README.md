@@ -1,1 +1,0 @@
-# grafic_pfz
