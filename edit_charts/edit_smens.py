@@ -124,10 +124,10 @@ class Editsmens:
         self.table.file.save(path_to_test1_json)
 
 
-test = Editsmens()
-test.edit_smens('Январь', 'Кирилл', {1: None,
-                                     2: None, 3: 3, 4: None, 5: None, 6: None, 7: 1, 8: 1, 9: None,
-                                     10: None, 11: None, 12: 1, 13: None, 14: None, 15: None, 16: None,
-                                     17: 1, 18: None, 19: 1, 20: None, 21: None, '22i': 1, 23: 7,
-                                     24: 10, 25: 1, 26: None, 27: None, 28: None, 29: None, 30: None,
-                                     31: 1})
+# test = Editsmens()
+# test.edit_smens('Январь', 'Кирилл', {1: None,
+#                                      2: None, 3: 3, 4: None, 5: None, 6: None, 7: 1, 8: 1, 9: None,
+#                                      10: None, 11: None, 12: 1, 13: None, 14: None, 15: None, 16: None,
+#                                      17: 1, 18: None, 19: 1, 20: None, 21: None, '22i': 1, 23: 7,
+#                                      24: 10, 25: 1, 26: None, 27: None, 28: None, 29: None, 30: None,
+#                                      31: 1})
