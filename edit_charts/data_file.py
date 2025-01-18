@@ -1,18 +1,8 @@
-import logging
-
 from openpyxl import load_workbook
 from openpyxl.styles import *
 from datetime import datetime
 import calendar
-from config.auto_search_dir import path_to_test1_json, path_myapplog
-
-logging.basicConfig(
-    filename=path_myapplog,
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
+from config.auto_search_dir import path_to_test1_json
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
     value = None

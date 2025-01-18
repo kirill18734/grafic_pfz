@@ -1,13 +1,12 @@
 import datetime
 import json
-import logging
 import os
 
 from telebot import types
 from telebot.types import BotCommand, InlineKeyboardMarkup, \
     InlineKeyboardButton
 import telebot
-from config.auto_search_dir import data_config, path_to_img, path_myapplog
+from config.auto_search_dir import data_config, path_to_img
 from edit_charts.create_new_chart import CreateChart
 from edit_charts.delete_user import DeleteUsers
 from edit_charts.data_file import DataCharts
@@ -18,13 +17,7 @@ import threading
 import time
 import schedule
 
-# Настройка логирования с указанием формата
-logging.basicConfig(
-    filename=path_myapplog,
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+
 # Создаем экземпляр бота
 bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
 
@@ -171,15 +164,15 @@ class Main:
                     try:
                         last_function()  # Попытка вызвать функцию
                         break  # Выход из цикла, если вызов завершился успешно
-                    except Exception as e:
-                        print(f"Ошибка при вызове last_function: {e}")
+                    except Exception as error:
+                        print(f"Ошибка при вызове last_function: {error}")
                         # Если возникла ошибка, продолжаем цикл, чтобы вызвать следующую функцию
                 else:
                     try:
                         last_function()  # Попытка вызвать функцию
                         break  # Выход из цикла, если вызов завершился успешно
-                    except Exception as e:
-                        print(f"Ошибка при вызове last_function: {e}")
+                    except Exception as error:
+                        print(f"Ошибка при вызове last_function: {error}")
                         # Если возникла ошибка, продолжаем цикл, чтобы вызвать следующую функцию
 
         @bot.callback_query_handler(func=lambda call: True)
@@ -419,6 +412,7 @@ class Main:
                 message_id=self.call.message_id,
                 reply_markup=self.markup
             )
+
         except Exception as error:
             bot.send_message(self.user_id, "Выберите месяц:",
                              reply_markup=self.markup)
@@ -428,11 +422,13 @@ class Main:
         item1 = InlineKeyboardButton("Смены / подработки",
                                      callback_data='shifts_jobs')
         item2 = InlineKeyboardButton("Сотрудники", callback_data='employees')
-        item3 = InlineKeyboardButton("Посмотреть график",
-                                     callback_data='get_image')  # url=data_config["URL"]
+        if data_config['URL'] :
+            item3 = InlineKeyboardButton("Посмотреть график",
+                                         callback_data='get_image')  # url=data_config["URL"]
 
         self.markup.add(item1, item2)
-        self.markup.add(item3)
+        if data_config['URL']:
+            self.markup.add(item3)
         # Обновляем клавиатуру в том же сообщении
         bot.edit_message_text(
             f"""Вы находитесь в разделе: "<u>{self.selected_month}</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start\n\nВыберете раздел:""",

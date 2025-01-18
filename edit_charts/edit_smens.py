@@ -1,18 +1,6 @@
-import logging
-
-from config.auto_search_dir import path_to_test1_json, path_myapplog
+from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
-import logging
 
-logging.basicConfig(
-    filename=path_myapplog,
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-# Пример записи лога
-logger.info('Это информационное сообщение.')
 
 
 
