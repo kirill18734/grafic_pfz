@@ -2,8 +2,6 @@ from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 
 
-
-
 # -------------------------------------редактирование смен и подработок --------------------------------
 
 class Editsmens:
@@ -48,6 +46,7 @@ class Editsmens:
             max_row=len(self.table.get_users(month)) + 4) for cell in row if
                     user in str(cell.value)]
 
+        # Проверяем, найден ли пользователь
         if not find_row:
             print("Пользователь не найден.")
             return
@@ -55,7 +54,7 @@ class Editsmens:
         # Предполагаем, что мы работаем только с первой найденной строкой
         target_row = find_row[0]
 
-        # Преобразуем генератор в список, чтобы получить доступ к ячейкам
+        # Получаем смены для текущего пользователя
         row_cells = list(self.file.iter_rows(min_col=4, max_row=target_row,
                                              min_row=target_row))[0]
 
@@ -84,7 +83,6 @@ class Editsmens:
                         continue  # Если значение не 1, пропускаем
 
             # Обновляем ячейку
-
             cell.value = value
             cell.border = get_font_style(color)[0]
             cell.font = get_font_style(color)[1]
@@ -94,13 +92,42 @@ class Editsmens:
             cell.alignment = get_font_style(color)[5]
             if color != 'orange':
                 cell.value = get_font_style(color)[6]
+        self.table.file.save(path_to_test1_json)
+        # получаем уже измененные смены для переданного пользователя
+        top_user = list(self.file.iter_rows(min_col=4, max_row=target_row,
+                                            min_row=target_row))[0]
+
+        # Сохраняем значения смен текущего пользователя в список
+        current_user_smens = [cell.value for cell in top_user]
+        # получаем все номера строк других пользователей
+        find_row_other_user = set([cell.row for row in self.file.iter_rows(min_row=5,
+                                                                           max_row=len(self.table.get_users(month)) + 4)
+                                   for cell in row if
+                                   user not in str(cell.value) and cell.row != target_row])
+        # проходимся по каждой строчки пользователей
+        for user_list in find_row_other_user:
+            # получем список занчения пользователя
+            row_cells_other = list(self.file.iter_rows(min_col=4, max_row=user_list,
+                                                       min_row=user_list))[0]
+            # проходимся по длине смен нашего главного пользователя
+            for i in range(len(current_user_smens)):
+                if current_user_smens[i] == 1 and row_cells_other[i].value == 1:
+                    color = 'green'
+                    row_cells_other[i].value = None  # Устанавливаем None для других пользователей
+                    row_cells_other[i].border = get_font_style(color)[0]
+                    row_cells_other[i].font = get_font_style(color)[1]
+                    row_cells_other[i].fill = get_font_style(color)[2]
+                    row_cells_other[i].number_format = get_font_style(color)[3]
+                    row_cells_other[i].protection = get_font_style(color)[4]
+                    row_cells_other[i].alignment = get_font_style(color)[5]
 
         self.table.file.save(path_to_test1_json)
 
-#
-# test = Editsmens() print(test.edit_smens('Январь', 'Кирилл', {1: None,
-# 2: None, 3: 3, 4: None, 5: None, 6: None, 7: 1, 8: None, 9: None,
-# 10: None, 11: None, 12: None, 13: None, 14: None, 15: None, 16: None,
-# 17: None, 18: None, 19: None, 20: None, 21: None, '22i': 1, 23: 7,
-# 24: None, 25: None, 26: None, 27: None, 28: None, 29: None, 30: None,
-# 31: 1}))
+
+test = Editsmens()
+test.edit_smens('Январь', 'Кирилл', {1: None,
+                                     2: None, 3: 3, 4: None, 5: None, 6: None, 7: 1, 8: 1, 9: None,
+                                     10: None, 11: None, 12: 1, 13: None, 14: None, 15: None, 16: None,
+                                     17: 1, 18: None, 19: 1, 20: None, 21: None, '22i': 1, 23: 7,
+                                     24: 10, 25: 1, 26: None, 27: None, 28: None, 29: None, 30: None,
+                                     31: 1})
