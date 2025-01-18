@@ -1,4 +1,3 @@
-import logging
 from copy import copy
 
 from config.auto_search_dir import path_to_test1_json

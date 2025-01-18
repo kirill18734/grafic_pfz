@@ -1,4 +1,3 @@
-import logging
 import re
 from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
@@ -14,7 +13,7 @@ class AddUser:
         self.name = None
         self.table = DataCharts()
 
-    # проставляем каждому пользователя акутальные подсчет через =SUMIF
+    # проставляем каждому пользователя актуальный подсчет через =SUMIF
     def edit_summ(self):
         count = 5
         rows_to_update = []
