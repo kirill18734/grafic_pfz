@@ -283,6 +283,8 @@ class Main:
                     # Обработка статусов
                 elif (self.smens + '_') in self.call.data:
                     key, day, smens, current_value = self.call.data.split('_')
+                    print(key,day,smens,current_value)
+
                     self.key = key
                     if self.smens == 'smens':
                         if current_value == 'None' and 'i' not in str(
@@ -478,7 +480,7 @@ class Main:
         item5 = InlineKeyboardButton("Показать картинку ",
                                      callback_data='image',
                                      )
-        self.markup.add(item4, item5)
+        self.markup.add(item4)
         try:
             bot.edit_message_text(
                 f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
@@ -614,6 +616,7 @@ class Main:
 
         for key, value in self.status_dict.items():
 
+            value = int(value) if value is not None else value
             if value is None:
                 emoji = "❌"  # Красный крестик
             elif value == 1 and type(key) == int:
