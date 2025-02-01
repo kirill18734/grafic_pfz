@@ -17,7 +17,6 @@ import threading
 import time
 import schedule
 
-
 # Создаем экземпляр бота
 bot = telebot.TeleBot(data_config['my_telegram_bot']['bot_token'],
 
@@ -93,13 +92,13 @@ class Main:
         # если передался параметр на создание графика, то выполняем фукнцию, которая создаться график на новый месяц
         self.input_enabled = False  # Флаг для контроля ввода
         self.delete_user = None
-        self.table_data = None
+        self.table_data = DataCharts()
+        self.table = Editsmens(self.table_data)
         self.last_list = None
         self.start_main()
 
     # начальные кнопки, если нет, нового месяца, но используем текущий, или если он есть, то выводим 2 кнопки
     def get_months(self):
-        self.table_data = DataCharts()
         self.last_list = self.table_data.file.worksheets[-1]
         # если крайний лист, будет совпадать с текущим месяцем, то значит будет одна кнопка для текущего месяца,
         # если нет, то 2 для нового графика и для старого
@@ -130,7 +129,7 @@ class Main:
 
             # Удаляем сообщения в диапазоне
             if message.message_id:
-                for id_ in range(max(1, message.message_id - 20), message.message_id + 1):
+                for id_ in range(max(1, message.message_id - 10), message.message_id + 1):
                     try:
                         bot.delete_message(chat_id=message.chat.id, message_id=id_)
                     except Exception as error:
@@ -155,7 +154,7 @@ class Main:
                     break  # Выход из цикла, если обработка завершена
                 elif 'Текущий месяц' in str(last_key) or 'Следующий месяц' in str(last_key):
                     if message.message_id:
-                        for id_ in range(max(1, message.message_id - 20), message.message_id + 1):
+                        for id_ in range(max(1, message.message_id - 10), message.message_id + 1):
                             try:
                                 bot.delete_message(chat_id=message.chat.id, message_id=id_)
                             except Exception as error:
@@ -201,7 +200,7 @@ class Main:
                     # После выбора месяца показываем кнопки "Смены / подработки" и "Сотрудники"
                     self.show_sments_dop_sments()
                 elif self.call.data in ['image']:
-                    response_text = f"""Заявка на создание картинки  создана. Пожалуйста ожидайте. В течении 30сек картинка отправиться. Если """
+                    response_text = f"""Заявка на создание картинки  создана. Пожалуйста ожидайте. В течении 30 сек картинка отправиться."""
                     bot.answer_callback_query(self.call.id, response_text,
                                               show_alert=True)
                     open_site(self.month)
@@ -250,7 +249,6 @@ class Main:
                     self.add_del_employees()
 
                 elif self.call.data.startswith('user_'):
-                    self.table = Editsmens()
                     self.select_user = str(self.call.data).replace(
                         'user_', '')
                     self.status_dict = self.table.smens(self.month,
@@ -260,8 +258,7 @@ class Main:
                 # удаления
                 elif self.call.data == 'confirm_delete':
                     if self.selected_employees:
-                        print(list(self.selected_employees), self.actualy_months)
-                        delete_user = DeleteUsers()
+                        delete_user = DeleteUsers(self.table_data)
                         if list(self.selected_employees) and self.actualy_months:
                             delete_user.delete(list(self.selected_employees),
                                                self.actualy_months)
@@ -283,7 +280,6 @@ class Main:
                     # Обработка статусов
                 elif (self.smens + '_') in self.call.data:
                     key, day, smens, current_value = self.call.data.split('_')
-                    print(key,day,smens,current_value)
 
                     self.key = key
                     if self.smens == 'smens':
@@ -348,7 +344,6 @@ class Main:
                     if 'i' not in str(self.key):
                         self.key = int(self.key)
 
-                    # print(int(self.key))
                     self.status_dict = {
                         key if key != self.key else self.select_new_invent: value
                         for key, value in
@@ -360,7 +355,6 @@ class Main:
                     if 'i' not in str(self.key):
                         self.key = int(self.key)
 
-                    # print(int(self.key))
                     self.status_dict = {
                         key if key != self.key else int(
                             str(self.key).replace('i', '')): value
@@ -424,7 +418,8 @@ class Main:
         item1 = InlineKeyboardButton("Смены / подработки",
                                      callback_data='shifts_jobs')
         item2 = InlineKeyboardButton("Сотрудники", callback_data='employees')
-        if data_config['URL'] :
+        item3 = None
+        if data_config['URL']:
             item3 = InlineKeyboardButton("Посмотреть график",
                                          callback_data='get_image')  # url=data_config["URL"]
 
@@ -480,7 +475,7 @@ class Main:
         item5 = InlineKeyboardButton("Показать картинку ",
                                      callback_data='image',
                                      )
-        self.markup.add(item4)
+        self.markup.add(item4, item5)
         try:
             bot.edit_message_text(
                 f"""Вы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
@@ -491,7 +486,6 @@ class Main:
             bot.send_message(self.user_id,
                              f"""В""ы находитесь в разделе: "{self.selected_month}" - "<u>Посмотреть график</u>".\n\nИспользуй кнопки для навигации. Чтобы вернуться на шаг назад, используй команду /back. В начало /start \n\nВыберите раздел:""",
                              reply_markup=self.markup)
-            print(f'Ошибка при удалении сообщения в add_del_employees: {error}')
 
     def add_employees(self):
         # Редактируем текущее сообщение, чтобы запросить имя сотрудника
@@ -506,21 +500,19 @@ class Main:
                                        self.process_employee_name)
 
     def process_employee_name(self, message):
-        users = DataCharts()
         if message.text not in ['/back',
-                                '/start'] and message.text not in users.get_users(self.month):
+                                '/start'] and message.text not in self.table_data.get_users(self.month):
             employee_name = message.text  # Получаем введенное имя сотрудника
             if str(employee_name) and self.actualy_months:
-                add_users = AddUser()
+                add_users = AddUser(self.table_data)
 
                 add_users.add(str(employee_name), self.actualy_months)
-                bot.delete_message(chat_id=message.chat.id,
-                                   message_id=message.message_id)
                 # Здесь вы можете обработать имя сотрудника, например, сохранить его в базе данных
                 response_text = f"Сотрудник {employee_name} добавлен."
                 bot.answer_callback_query(self.call.id, response_text,
                                           show_alert=True)
-
+                bot.delete_message(chat_id=message.chat.id,
+                                   message_id=message.message_id)
                 self.add_del_employees()
             else:
                 response_text = "Не удалось добавить пользователя, необходимо подключиться, возникла ошибка"
@@ -535,7 +527,7 @@ class Main:
                     except Exception as error:
                         print(f"Ошибка при удалении сообщения в process_employee_name: {id_}: {error}")
 
-            elif message.text in users.get_users(self.month):
+            elif message.text in self.table_data.get_users(self.month):
                 if self.state_stack.popitem():
                     self.state_stack.popitem()
                     response_text = f"Данное имя уже есть в таблице, пожалуйста, напишите другое"
@@ -548,7 +540,6 @@ class Main:
                     self.add_del_employees()
 
     def dell_employee(self):
-        self.table_data = DataCharts()
         employees = self.table_data.get_users(
             self.month)  # Получаем список сотрудников за последний месяц
 
@@ -610,8 +601,8 @@ class Main:
 
     def actualy_smens(self):
         self.markup = types.InlineKeyboardMarkup()
-        table = Editsmens()
-        get_days = table.get_days(self.month)
+
+        get_days = self.table.get_days(self.month)
         buttons = []
 
         for key, value in self.status_dict.items():
@@ -718,9 +709,10 @@ def run_schedule():
 schedule_thread = threading.Thread(target=run_schedule)
 schedule_thread.start()
 # запуск бота
-Main()
+
 while True:
     try:
+        Main()
         bot.infinity_polling(timeout=90, long_polling_timeout=5)
     except Exception as e:
-        print(f"Error: {e}")
+        continue

@@ -5,9 +5,9 @@ from edit_charts.data_file import DataCharts, get_font_style
 # -------------------------------------редактирование смен и подработок --------------------------------
 
 class Editsmens:
-    def __init__(self):
+    def __init__(self, datacharts):
         self.file = None
-        self.table = DataCharts()
+        self.table = datacharts
 
     def smens(self, month, user):
         self.file = self.table.file[month]
@@ -48,7 +48,6 @@ class Editsmens:
 
         # Проверяем, найден ли пользователь
         if not find_row:
-            print("Пользователь не найден.")
             return
 
         # Предполагаем, что мы работаем только с первой найденной строкой
@@ -122,7 +121,6 @@ class Editsmens:
                     row_cells_other[i].alignment = get_font_style(color)[5]
 
         self.table.file.save(path_to_test1_json)
-
 
 # test = Editsmens()
 # test.edit_smens('Январь', 'Кирилл', {1: None,

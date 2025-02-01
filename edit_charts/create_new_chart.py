@@ -4,7 +4,6 @@ from config.auto_search_dir import path_to_test1_json
 from edit_charts.data_file import DataCharts, get_font_style
 
 
-
 # -------------------------------------создание нового месяца --------------------------------
 class CreateChart:
 
@@ -68,6 +67,8 @@ class CreateChart:
         self.clear_table()
         # изменяем сумированые ячейки
         self.edit_summ(-count_remove)
+        self.table_data.file.save(
+            path_to_test1_json)
 
     def edit_summ(self, count_add):
         # также изменяем ячейки для суммирования резульата
@@ -83,6 +84,8 @@ class CreateChart:
                         self.list_days_2[
                             self.table_data.data_months()[0] + count_add])
                     cell.value = text
+        self.table_data.file.save(
+            path_to_test1_json)
 
     def clear_table(self):
         # очищаем таблицу
@@ -98,6 +101,8 @@ class CreateChart:
                 cell.protection = get_font_style('green')[4]
                 cell.alignment = get_font_style('green')[5]
                 cell.value = get_font_style('green')[6]
+        self.table_data.file.save(
+            path_to_test1_json)
 
     # простовляем актуальные дни недели для нового месяца
     def days_week(self, count_add):
@@ -112,6 +117,8 @@ class CreateChart:
                 # изменяем значение дня недели на актуальный день
                 self.file.cell(row=3, column=i + 4).value = self.weekdays[
                     current_index]
+        self.table_data.file.save(
+            path_to_test1_json)
 
     def copy_range(self, coll, count_add):
         # получаем старый лист
@@ -140,6 +147,9 @@ class CreateChart:
         self.clear_table()
         # изменяем сумированые ячейки
         self.edit_summ(count_add)
+
+        self.table_data.file.save(
+            path_to_test1_json)
 
     # новый график
     def new_chart(self):
@@ -194,6 +204,6 @@ class CreateChart:
         self.table_data.file.save(
             path_to_test1_json)
 
-#
+
 # test = CreateChart()
 # test.new_chart()

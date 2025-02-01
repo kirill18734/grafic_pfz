@@ -1,14 +1,12 @@
 from config.auto_search_dir import path_to_test1_json
-from edit_charts.data_file import DataCharts
 import re
-
 
 
 # -------------------------------------удаление  пользователей --------------------------------
 
 class DeleteUsers:
-    def __init__(self):
-        self.table = DataCharts()
+    def __init__(self, datacharts):
+        self.table = datacharts
         self.file = self.table.file
 
     # изменяем координаты для суммирования строк
@@ -55,7 +53,7 @@ class DeleteUsers:
         # Удаляем строки
         for row in reversed(rows):
             self.file.delete_rows(row)
-
+            self.table.file.save(path_to_test1_json)
         # Объединяем ячейки обратно с учетом сдвига
         for merged in merged_ranges:
             # Получаем диапазон объединенных ячеек
@@ -65,7 +63,6 @@ class DeleteUsers:
                                   end_row=max_row - 1,
                                   end_column=max_col)
         self.edit_summ(month)
-        self.table.file.save(path_to_test1_json)
 
     # удаление строк
     def delete(self, users, months):
@@ -80,4 +77,4 @@ class DeleteUsers:
                 if row_del_users:
                     # вызываем функцию для удаления , где указываем
                     self.unmerge(len(self.table.get_users(month)) + 5, row_del_users, month)
-            self.table.file.save(path_to_test1_json)
+        self.table.file.save(path_to_test1_json)

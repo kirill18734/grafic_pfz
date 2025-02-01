@@ -6,12 +6,12 @@ from copy import copy
 
 # -------------------------------------добавление пользователя --------------------------------
 class AddUser:
-    def __init__(self):
+    def __init__(self, datacharts):
         self.month = None
         self.file = None
         self.merged_ranges = None
         self.name = None
-        self.table = DataCharts()
+        self.table = datacharts
 
     # проставляем каждому пользователя актуальный подсчет через =SUMIF
     def edit_summ(self):
@@ -173,7 +173,6 @@ class AddUser:
             # вызываем функцию для обновления формул автоподсчета
             self.edit_summ()
             self.table.file.save(path_to_test1_json)
-            self.table.file.close()
 
 # test = AddUser()
 # test.add('Домой', ['Январь', 'Февраль', 'Декабрь'])

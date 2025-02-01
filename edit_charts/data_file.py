@@ -3,6 +3,8 @@ from openpyxl.styles import *
 from datetime import datetime
 import calendar
 from config.auto_search_dir import path_to_test1_json
+
+
 # функция для получeния стилизации нужных ячеек
 def get_font_style(color):
     value = None
